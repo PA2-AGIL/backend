@@ -1,3 +1,6 @@
+// const dotenv = require('dotenv');
+// dotenv.config({ path: `${process.env.NODE_ENV}.env` });
+
 module.exports = {
   type: 'postgres',
   host: process.env.TYPEORM_HOST,
@@ -7,12 +10,12 @@ module.exports = {
   database: process.env.TYPEORM_DATABASE,
   synchronize: process.env.TYPEORM_SYNCHRONIZE,
   logging: process.env.TYPEORM_LOGGING,
-  entities: [process.env.TYPEORM_ENTITIES],
-  migrations: [process.env.TYPEORM_MIGRATIONS],
-  subscribers: [process.env.TYPEORM_SUBSCRIBERS],
+  entities: ['./dist/database/entities/**/*.{js,ts}'],
+  migrations: ['./dist/database/migrations/*.{js,ts}'],
+  subscribers: ['./dist/database/subscribers/*.{js,ts}'],
   cli: {
-    entitiesDir: process.env.TYPEORM_ENTITIES_DIR,
-    migrationsDir: process.env.TYPEORM_MIGRATIONS_DIR,
-    subscribersDir: process.env.TYPEORM_SUBSCRIBERS_DIR,
+    entitiesDir: './src/database/entities',
+    migrationsDir: './src/database/migrations',
+    subscribersDir: './src/database/subscribers',
   },
 };
