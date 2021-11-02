@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { CreateProducerDTO } from 'src/database/repositories/dtos/createProducerDTO.interface';
+import { CreateProducerDTO } from '../../../database/repositories/dtos/createProducerDTO.interface';
 
 export class CreateProducerDTOImp implements CreateProducerDTO {
   @IsNotEmpty()
