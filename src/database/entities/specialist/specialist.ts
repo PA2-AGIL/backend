@@ -26,7 +26,7 @@ export class Specialist extends BaseEntity {
   phone: string;
 
   @Column()
-  types: SpecialistTypes;
+  type: SpecialistTypes;
 
   @CreateDateColumn({
     type: 'timestamp',

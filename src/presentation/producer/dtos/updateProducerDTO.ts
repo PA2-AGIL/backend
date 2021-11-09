@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { UpdateProducerDTO } from '../../../database/repositories/dtos/updateProducerDTO.interface';
+import { UpdateProducerDTO } from '../../../database/repositories/producer/dtos/updateProducerDTO.interface';
 
 export class UpdateProducerDTOImp implements UpdateProducerDTO {
   @IsNotEmpty()

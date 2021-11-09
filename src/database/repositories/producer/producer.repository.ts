@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Producer } from '../entities/producer/producer';
+import { Producer } from '../../entities/producer/producer';
 import { CreateProducerDTO } from './dtos/createProducerDTO.interface';
 import { UpdateProducerDTO } from './dtos/updateProducerDTO.interface';
 

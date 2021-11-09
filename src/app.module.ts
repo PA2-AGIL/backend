@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProducerModule } from './presentation/producer/producer.module';
+import { SpecialistModule } from './presentation/specialist/specialist.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ProducerModule } from './presentation/producer/producer.module';
     }),
     TypeOrmModule.forRoot(),
     ProducerModule,
+    SpecialistModule,
   ],
   controllers: [AppController],
   providers: [AppService],

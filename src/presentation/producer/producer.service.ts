@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProducerRepository } from '../../database/repositories/producer.repository';
+import { ProducerRepository } from '../../database/repositories/producer/producer.repository';
 import { CreateProducerDTOImp } from './dtos/createProducerDTO';
 import { UpdateProducerDTOImp } from './dtos/updateProducerDTO';
 
