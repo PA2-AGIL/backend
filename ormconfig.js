@@ -19,7 +19,6 @@ switch (process.env.NODE_ENV) {
       username: process.env.TYPEORM_USERNAME || 'postgres',
       password: process.env.TYPEORM_PASSWORD || 'admin',
       database: process.env.TYPEORM_DATABASE,
-      synchronize: process.env.TYPEORM_SYNCHRONIZE,
       migrationsRun: true,
     });
     break;
@@ -38,7 +37,6 @@ switch (process.env.NODE_ENV) {
       username: process.env.TYPEORM_USERNAME,
       password: process.env.TYPEORM_PASSWORD,
       database: process.env.TYPEORM_DATABASE,
-      synchronize: process.env.TYPEORM_SYNCHRONIZE,
       migrationsRun: true,
       ssl: {
         rejectUnauthorized: false,
