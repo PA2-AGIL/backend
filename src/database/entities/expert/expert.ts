@@ -26,6 +26,9 @@ export class Expert extends BaseEntity {
   @Column()
   address: string;
 
+  @Column()
+  type: string;
+
   @CreateDateColumn({
     type: 'timestamp',
   })
