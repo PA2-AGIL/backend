@@ -15,7 +15,7 @@ export class CreateExpertDTOImp implements CreateProducerDTO {
   password: string;
 
   @IsNotEmpty()
-  @IsPhoneNumber()
+  @IsPhoneNumber('BR')
   phone: string;
 
   @IsNotEmpty()

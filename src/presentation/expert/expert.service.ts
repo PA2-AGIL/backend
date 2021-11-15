@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ExpertType } from 'src/database/entities/expert/expert-type.enum';
 import { UpdateExpertDTO } from 'src/database/repositories/dtos/updateExpertDTO.interface';
 import { expertRespository } from 'src/database/repositories/expert.repository';
 import { CreateExpertDTOImp } from './dtos/createExpertDTO';
@@ -20,6 +21,16 @@ export class ExpertService {
   }
 
   async create(createExpertDTO: CreateExpertDTOImp) {
+    const { type } = createExpertDTO;
+
+    const isValidType = Object.values(ExpertType).find(
+      (value) => value.toString() === type.toUpperCase(),
+    );
+
+    if (!isValidType) {
+      throw new BadRequestException('Tipo do Especialista é inválido');
+    }
+
     return this.repository.createExpert(createExpertDTO);
   }
 
