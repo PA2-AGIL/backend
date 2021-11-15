@@ -20,5 +20,9 @@ export class CreateExpertDTOImp implements CreateProducerDTO {
 
   @IsNotEmpty()
   @IsString()
+  type: string;
+
+  @IsNotEmpty()
+  @IsString()
   address: string;
 }

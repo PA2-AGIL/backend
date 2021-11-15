@@ -16,7 +16,7 @@ export class expertRespository extends Repository<Expert> {
   }
 
   async createExpert(createExpertDTO: CreateExpertDTO) {
-    const { name, phone, password, email, address } = createExpertDTO;
+    const { name, phone, password, email, address, type } = createExpertDTO;
 
     const expert = new Expert();
 
@@ -24,6 +24,7 @@ export class expertRespository extends Repository<Expert> {
     expert.address = address;
     expert.phone = phone;
     expert.email = email;
+    expert.type = type;
     expert.password = password;
 
     await expert.save();
@@ -34,13 +35,14 @@ export class expertRespository extends Repository<Expert> {
   async updateExpert(id: number, updateExpertDTO: UpdateExpertDTO) {
     const expert = await this.getById(id);
 
-    const { name, phone, password, email, address } = updateExpertDTO;
+    const { name, phone, password, email, address, type } = updateExpertDTO;
 
     expert.name = name;
     expert.address = address;
     expert.phone = phone;
     expert.email = email;
     expert.password = password;
+    expert.type = type;
 
     await expert.save();
 

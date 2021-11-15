@@ -30,6 +30,10 @@ export class UpdateExpertDTOImp implements UpdateExpertDTO {
 
   @IsNotEmpty()
   @IsString()
+  type: string;
+
+  @IsNotEmpty()
+  @IsString()
   @IsOptional()
   address: string;
 }
