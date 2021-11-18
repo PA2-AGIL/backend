@@ -3,9 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Question } from '../question/question';
 
 @Entity()
 export class Producer extends BaseEntity {
@@ -26,6 +28,9 @@ export class Producer extends BaseEntity {
 
   @Column()
   address: string;
+
+  @ManyToOne(() => Question, (question) => question.owner)
+  quetions: Question[];
 
   @CreateDateColumn({
     type: 'timestamp',
