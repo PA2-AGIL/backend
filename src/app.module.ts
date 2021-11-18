@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProducerModule } from './presentation/producer/producer.module';
 import { ExpertModule } from './presentation/expert/expert.module';
+import { QuestionModule } from './presentation/question/question.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ExpertModule } from './presentation/expert/expert.module';
     TypeOrmModule.forRoot(),
     ProducerModule,
     ExpertModule,
+    QuestionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
