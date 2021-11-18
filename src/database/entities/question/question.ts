@@ -18,7 +18,7 @@ export class Question extends BaseEntity {
   @Column()
   content: string;
 
-  @Column()
+  @Column({ default: false, nullable: false })
   closed: boolean;
 
   @CreateDateColumn({
