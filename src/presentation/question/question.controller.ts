@@ -26,9 +26,12 @@ export class QuestionController {
     return this.service.getByID(id);
   }
 
-  @Post()
-  create(@Body() createQuestion: CreateQuestionDTOImp) {
-    return this.service.create(createQuestion);
+  @Post('/:ownerId')
+  create(
+    @Body() createQuestion: CreateQuestionDTOImp,
+    @Param('ownerId', ParseIntPipe) ownerId: number,
+  ) {
+    return this.service.create(createQuestion, ownerId);
   }
 
   @Put('/:id')

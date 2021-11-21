@@ -3,7 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -23,8 +23,8 @@ export class Question extends BaseEntity {
   @Column({ default: false, nullable: false })
   closed: boolean;
 
-  @OneToMany(() => Producer, (producer) => producer.quetions)
-  owner: Producer;
+  @ManyToOne(() => Producer, (producer) => producer.questions)
+  producer: Producer;
 
   @CreateDateColumn({
     type: 'timestamp',
