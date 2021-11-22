@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Producer } from '../../database/entities/producer/producer';
 import { QuestionRepository } from 'src/database/repositories/question.repository';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTOImp';
