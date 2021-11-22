@@ -22,12 +22,13 @@ export class AnswerRepository extends Repository<Answer> {
   }
 
   async createAnswer(createAnswerDTO: CreateAnswerDTO) {
-    const { content, owner } = createAnswerDTO;
+    const { content, isExpert, ownerId } = createAnswerDTO;
 
     const answer = new Answer();
 
     answer.content = content;
-    answer.owner = owner;
+    answer.ownerId = ownerId;
+    answer.isExpert = isExpert;
 
     await answer.save();
 
@@ -36,10 +37,11 @@ export class AnswerRepository extends Repository<Answer> {
 
   async updateAnswer(id: number, updateAnswerDTO: UpdateAnswerDTO) {
     const answer = await this.getByID(id);
-    const { content, owner } = updateAnswerDTO;
+    const { content, ownerId, isExpert } = updateAnswerDTO;
 
     answer.content = content;
-    answer.owner = owner;
+    answer.ownerId = ownerId;
+    answer.isExpert = isExpert;
 
     await answer.save();
 

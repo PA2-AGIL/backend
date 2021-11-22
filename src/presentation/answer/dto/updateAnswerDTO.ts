@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 import { UpdateAnswerDTO } from '../../../database/repositories/dtos/updateAnswerDTO.interface';
 
 export class UpdateAnswerDTOImp implements UpdateAnswerDTO {
@@ -8,5 +8,9 @@ export class UpdateAnswerDTOImp implements UpdateAnswerDTO {
 
   @IsNotEmpty()
   @IsString()
-  owner: string;
+  ownerId: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isExpert: boolean;
 }

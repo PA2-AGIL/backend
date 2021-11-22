@@ -1,4 +1,5 @@
 export interface UpdateAnswerDTO {
   content: string;
-  owner: string;
+  ownerId: string;
+  isExpert: boolean;
 }

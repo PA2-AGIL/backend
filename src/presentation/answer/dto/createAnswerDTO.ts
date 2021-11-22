@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 import { CreateAnswerDTO } from '../../../database/repositories/dtos/createAnswerDTO.interface';
 
 export class CreateAnswerDTOImp implements CreateAnswerDTO {
@@ -8,5 +8,9 @@ export class CreateAnswerDTOImp implements CreateAnswerDTO {
 
   @IsNotEmpty()
   @IsString()
-  owner: string;
+  ownerId: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isExpert: boolean;
 }

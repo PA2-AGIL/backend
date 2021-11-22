@@ -1,4 +1,5 @@
 export interface CreateAnswerDTO {
   content: string;
-  owner: string;
+  ownerId: string;
+  isExpert: boolean;
 }

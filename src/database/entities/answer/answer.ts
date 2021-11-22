@@ -16,7 +16,10 @@ export class Answer extends BaseEntity {
   content: string;
 
   @Column({ nullable: false })
-  owner: string;
+  ownerId: string;
+
+  @Column()
+  isExpert: boolean;
 
   @CreateDateColumn({
     type: 'timestamp',
