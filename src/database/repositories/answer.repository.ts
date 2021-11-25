@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Answer } from '../entities/answer/answer';
+import { Question } from '../entities/question/question';
 import { CreateAnswerDTO } from './dtos/createAnswerDTO.interface';
 import { UpdateAnswerDTO } from './dtos/updateAnswerDTO.interface';
 
@@ -21,7 +22,7 @@ export class AnswerRepository extends Repository<Answer> {
     return answer;
   }
 
-  async createAnswer(createAnswerDTO: CreateAnswerDTO) {
+  async createAnswer(createAnswerDTO: CreateAnswerDTO, question: Question) {
     const { content, isExpert, ownerId } = createAnswerDTO;
 
     const answer = new Answer();
@@ -29,6 +30,7 @@ export class AnswerRepository extends Repository<Answer> {
     answer.content = content;
     answer.ownerId = ownerId;
     answer.isExpert = isExpert;
+    answer.question = question;
 
     await answer.save();
 

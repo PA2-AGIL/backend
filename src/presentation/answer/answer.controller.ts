@@ -26,9 +26,12 @@ export class AnswerController {
     return this.service.getByID(id);
   }
 
-  @Post()
-  create(@Body() createAnswerDTO: CreateAnswerDTOImp) {
-    return this.service.create(createAnswerDTO);
+  @Post('/:questionId')
+  create(
+    @Body() createAnswerDTO: CreateAnswerDTOImp,
+    @Param('questionId', ParseIntPipe) questionId: number,
+  ) {
+    return this.service.create(createAnswerDTO, questionId);
   }
 
   @Put('/:id')
