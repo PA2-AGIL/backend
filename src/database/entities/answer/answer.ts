@@ -3,9 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Question } from '../question/question';
 
 @Entity()
 export class Answer extends BaseEntity {
@@ -20,6 +22,9 @@ export class Answer extends BaseEntity {
 
   @Column()
   isExpert: boolean;
+
+  @ManyToOne(() => Question, (question) => question.answers)
+  question: Question;
 
   @CreateDateColumn({
     type: 'timestamp',
