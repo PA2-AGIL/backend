@@ -3,34 +3,28 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Question } from '../question/question';
 
 @Entity()
-export class Producer extends BaseEntity {
+export class Answer extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  content: string;
+
+  @Column({ nullable: false })
+  ownerId: string;
 
   @Column()
-  email: string;
+  isExpert: boolean;
 
-  @Column()
-  password: string;
-
-  @Column()
-  phone: string;
-
-  @Column()
-  address: string;
-
-  @OneToMany(() => Question, (question) => question.producer)
-  questions: Question[];
+  @ManyToOne(() => Question, (question) => question.answers)
+  question: Question;
 
   @CreateDateColumn({
     type: 'timestamp',

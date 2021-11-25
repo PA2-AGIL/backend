@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Producer } from '../entities/producer/producer';
 import { Question } from '../entities/question/question';
 import { CreateQuestionDTO } from './dtos/createQuestionDTO.interface';
 import { UpdateQuestionDTO } from './dtos/updateQuestionDTO.interface';
@@ -21,13 +22,17 @@ export class QuestionRepository extends Repository<Question> {
     return question;
   }
 
-  async createQuestion(createQuestionDTO: CreateQuestionDTO) {
+  async createQuestion(
+    createQuestionDTO: CreateQuestionDTO,
+    producer: Producer,
+  ) {
     const { title, content } = createQuestionDTO;
 
     const question = new Question();
 
     question.title = title;
     question.content = content;
+    question.producer = producer;
 
     await question.save();
 

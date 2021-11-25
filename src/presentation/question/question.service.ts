@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionRepository } from 'src/database/repositories/question.repository';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTOImp';
+import { ProducerRepository } from 'src/database/repositories/producer.repository';
 
 @Injectable()
 export class QuestionService {
   constructor(
     @InjectRepository(QuestionRepository)
     private readonly repository: QuestionRepository,
+    @InjectRepository(ProducerRepository)
+    private readonly producerRepository: ProducerRepository,
   ) {}
 
   async getQuestions() {
@@ -19,8 +22,10 @@ export class QuestionService {
     return this.repository.getByID(id);
   }
 
-  async create(createQuestion: CreateQuestionDTOImp) {
-    return this.repository.createQuestion(createQuestion);
+  async create(createQuestion: CreateQuestionDTOImp, ownerId: number) {
+    const owner = await this.producerRepository.getByID(ownerId);
+
+    return this.repository.createQuestion(createQuestion, owner);
   }
 
   async update(id: number, updateQuestion: UpdateQuestionDTOImp) {
