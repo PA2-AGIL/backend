@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const dotenv = require('dotenv');
+
 const dbConfig = {
   logging: process.env.TYPEORM_LOGGING,
   entities: ['./dist/database/entities/**/*.{js,ts}'],
@@ -12,17 +15,21 @@ const dbConfig = {
 
 switch (process.env.NODE_ENV) {
   case 'dev':
+    dotenv.config({ path: `./${process.env.NODE_ENV}.env` });
+
     Object.assign(dbConfig, {
       type: 'postgres',
       host: process.env.TYPEORM_HOST,
       port: process.env.TYPEORM_PORT,
-      username: process.env.TYPEORM_USERNAME || 'postgres',
-      password: process.env.TYPEORM_PASSWORD || 'admin',
+      username: process.env.TYPEORM_USERNAME,
+      password: process.env.TYPEORM_PASSWORD,
       database: process.env.TYPEORM_DATABASE,
       migrationsRun: true,
     });
     break;
   case 'test':
+    dotenv.config({ path: `./${process.env.NODE_ENV}.env` });
+
     Object.assign(dbConfig, {
       type: 'sqlite',
       database: 'db.test.sqlite',
@@ -30,6 +37,8 @@ switch (process.env.NODE_ENV) {
     });
     break;
   case 'prod':
+    dotenv.config({ path: `./${process.env.NODE_ENV}.env` });
+
     Object.assign(dbConfig, {
       type: 'postgres',
       host: process.env.TYPEORM_HOST,
