@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Question } from '../question/question';
 
 @Entity()
 export class File extends BaseEntity {
@@ -10,4 +17,7 @@ export class File extends BaseEntity {
 
   @Column()
   url: string;
+
+  @ManyToOne(() => Question, (question) => question.files)
+  question: Question;
 }
