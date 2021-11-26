@@ -33,7 +33,7 @@ export class FileUploadService {
       })
       .promise();
 
-    return this.create({
+    return await this.create({
       fileName: uploadResult.Key,
       url: uploadResult.Location,
     });

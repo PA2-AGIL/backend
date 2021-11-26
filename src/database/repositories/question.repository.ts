@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { File } from '../entities/file/file';
 import { Producer } from '../entities/producer/producer';
 import { Question } from '../entities/question/question';
 import { CreateQuestionDTO } from './dtos/createQuestionDTO.interface';
@@ -24,6 +25,7 @@ export class QuestionRepository extends Repository<Question> {
 
   async createQuestion(
     createQuestionDTO: CreateQuestionDTO,
+    files: File[],
     producer: Producer,
   ) {
     const { title, content } = createQuestionDTO;
@@ -32,6 +34,7 @@ export class QuestionRepository extends Repository<Question> {
 
     question.title = title;
     question.content = content;
+    question.files = files;
     question.producer = producer;
 
     await question.save();

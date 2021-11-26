@@ -8,5 +8,6 @@ import { FileUploadService } from './file-upload.service';
   imports: [TypeOrmModule.forFeature([FileRepository])],
   controllers: [FileUploadController],
   providers: [FileUploadService],
+  exports: [FileUploadService],
 })
 export class FileUploadModule {}
