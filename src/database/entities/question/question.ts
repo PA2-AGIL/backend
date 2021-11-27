@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Answer } from '../answer/answer';
+import { File } from '../file/file';
 import { Producer } from '../producer/producer';
 
 @Entity()
@@ -30,6 +31,9 @@ export class Question extends BaseEntity {
 
   @OneToMany(() => Answer, (answer) => answer.question)
   answers: Answer[];
+
+  @OneToMany(() => File, (file) => file.question, { lazy: true })
+  files: File[];
 
   @CreateDateColumn({
     type: 'timestamp',

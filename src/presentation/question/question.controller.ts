@@ -7,7 +7,10 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTOImp';
 import { QuestionService } from './question.service';
@@ -27,11 +30,13 @@ export class QuestionController {
   }
 
   @Post('/:ownerId')
+  @UseInterceptors(FilesInterceptor('files'))
   create(
     @Body() createQuestion: CreateQuestionDTOImp,
+    @UploadedFiles() files: Express.Multer.File[],
     @Param('ownerId', ParseIntPipe) ownerId: number,
   ) {
-    return this.service.create(createQuestion, ownerId);
+    return this.service.create(createQuestion, files, ownerId);
   }
 
   @Put('/:id')

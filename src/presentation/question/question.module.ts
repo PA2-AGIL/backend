@@ -4,9 +4,13 @@ import { QuestionController } from './question.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { QuestionRepository } from '../../database/repositories/question.repository';
 import { ProducerRepository } from '../../database/repositories/producer.repository';
+import { FileUploadModule } from 'src/service/file-upload/file-upload.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([QuestionRepository, ProducerRepository])],
+  imports: [
+    TypeOrmModule.forFeature([QuestionRepository, ProducerRepository]),
+    FileUploadModule,
+  ],
   providers: [QuestionService],
   controllers: [QuestionController],
 })
