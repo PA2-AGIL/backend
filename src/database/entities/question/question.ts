@@ -14,8 +14,8 @@ import { Producer } from '../producer/producer';
 
 @Entity()
 export class Question extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   title: string;

@@ -11,7 +11,7 @@ export class expertRespository extends Repository<Expert> {
     return experts;
   }
 
-  async getById(id: number) {
+  async getById(id: string) {
     return await this.findOne({ id });
   }
 
@@ -32,7 +32,7 @@ export class expertRespository extends Repository<Expert> {
     return expert;
   }
 
-  async updateExpert(id: number, updateExpertDTO: UpdateExpertDTO) {
+  async updateExpert(id: string, updateExpertDTO: UpdateExpertDTO) {
     const expert = await this.getById(id);
 
     const { name, phone, password, email, address, type } = updateExpertDTO;
@@ -49,7 +49,7 @@ export class expertRespository extends Repository<Expert> {
     return expert;
   }
 
-  async deleteExpert(id: number) {
+  async deleteExpert(id: string) {
     return this.delete({ id });
   }
 }

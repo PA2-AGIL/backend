@@ -8,8 +8,8 @@ import {
 } from 'typeorm';
 @Entity()
 export class Expert extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;

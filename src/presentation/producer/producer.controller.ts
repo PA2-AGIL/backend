@@ -22,7 +22,7 @@ export class ProducerController {
   }
 
   @Get('/:id')
-  getByID(@Param('id', ParseIntPipe) id: number) {
+  getByID(@Param('id') id: string) {
     return this.service.getByID(id);
   }
 
@@ -33,14 +33,14 @@ export class ProducerController {
 
   @Put('/:id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() updateProducerDTO: UpdateProducerDTOImp,
   ) {
     return this.service.update(id, updateProducerDTO);
   }
 
   @Delete('/:id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id') id: string) {
     return this.service.delete(id);
   }
 }

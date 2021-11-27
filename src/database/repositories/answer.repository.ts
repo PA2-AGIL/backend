@@ -12,7 +12,7 @@ export class AnswerRepository extends Repository<Answer> {
     return answers;
   }
 
-  async getByID(id: number) {
+  async getByID(id: string) {
     const answer = await this.findOne({ id });
 
     if (!answer) {
@@ -37,7 +37,7 @@ export class AnswerRepository extends Repository<Answer> {
     return answer;
   }
 
-  async updateAnswer(id: number, updateAnswerDTO: UpdateAnswerDTO) {
+  async updateAnswer(id: string, updateAnswerDTO: UpdateAnswerDTO) {
     const answer = await this.getByID(id);
     const { content, ownerId, isExpert } = updateAnswerDTO;
 
@@ -50,7 +50,7 @@ export class AnswerRepository extends Repository<Answer> {
     return answer;
   }
 
-  async deleteAnswer(id: number) {
+  async deleteAnswer(id: string) {
     return this.delete({ id });
   }
 }

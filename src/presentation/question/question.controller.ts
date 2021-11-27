@@ -25,7 +25,7 @@ export class QuestionController {
   }
 
   @Get('/:id')
-  getByID(@Param('id', ParseIntPipe) id: number) {
+  getByID(@Param('id') id: string) {
     return this.service.getByID(id);
   }
 
@@ -34,21 +34,21 @@ export class QuestionController {
   create(
     @Body() createQuestion: CreateQuestionDTOImp,
     @UploadedFiles() files: Express.Multer.File[],
-    @Param('ownerId', ParseIntPipe) ownerId: number,
+    @Param('ownerId') ownerId: string,
   ) {
     return this.service.create(createQuestion, files, ownerId);
   }
 
   @Put('/:id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
     @Body() updateQuestion: UpdateQuestionDTOImp,
   ) {
     return this.service.update(id, updateQuestion);
   }
 
   @Delete('/:id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id', ParseIntPipe) id: string) {
     return this.service.delete(id);
   }
 }

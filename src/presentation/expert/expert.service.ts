@@ -16,7 +16,7 @@ export class ExpertService {
     return this.repository.getExperts();
   }
 
-  async getByID(id: number) {
+  async getByID(id: string) {
     return this.repository.getById(id);
   }
 
@@ -34,11 +34,11 @@ export class ExpertService {
     return this.repository.createExpert(createExpertDTO);
   }
 
-  async update(id: number, updateExpertDTO: UpdateExpertDTO) {
+  async update(id: string, updateExpertDTO: UpdateExpertDTO) {
     return this.repository.updateExpert(id, updateExpertDTO);
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     return this.repository.deleteExpert(id);
   }
 }

@@ -20,14 +20,14 @@ export class QuestionService {
     return this.repository.getQuestions();
   }
 
-  async getByID(id: number) {
+  async getByID(id: string) {
     return this.repository.getByID(id);
   }
 
   async create(
     createQuestion: CreateQuestionDTOImp,
     files: Express.Multer.File[],
-    ownerId: number,
+    ownerId: string,
   ) {
     const owner = await this.producerRepository.getByID(ownerId);
 
@@ -45,11 +45,11 @@ export class QuestionService {
     );
   }
 
-  async update(id: number, updateQuestion: UpdateQuestionDTOImp) {
+  async update(id: string, updateQuestion: UpdateQuestionDTOImp) {
     return this.repository.updateQuestion(id, updateQuestion);
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     return this.repository.deleteQuestion(id);
   }
 }

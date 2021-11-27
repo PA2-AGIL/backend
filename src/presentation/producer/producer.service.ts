@@ -15,7 +15,7 @@ export class ProducerService {
     return this.repository.getProducers();
   }
 
-  async getByID(id: number) {
+  async getByID(id: string) {
     return this.repository.getByID(id);
   }
 
@@ -23,11 +23,11 @@ export class ProducerService {
     return this.repository.createProducer(createProducerDTO);
   }
 
-  async update(id: number, updateProducerDTO: UpdateProducerDTOImp) {
+  async update(id: string, updateProducerDTO: UpdateProducerDTOImp) {
     return this.repository.updateProducer(id, updateProducerDTO);
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     return this.repository.deleteProducer(id);
   }
 }

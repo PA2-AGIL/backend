@@ -22,7 +22,7 @@ export class ExpertController {
   }
 
   @Get('/:id')
-  getByID(@Param('id', ParseIntPipe) id: number) {
+  getByID(@Param('id') id: string) {
     return this.service.getByID(id);
   }
 
@@ -32,15 +32,12 @@ export class ExpertController {
   }
 
   @Put('/:id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateExpertDTO: UpdateExpertDTOImp,
-  ) {
+  update(@Param('id') id: string, @Body() updateExpertDTO: UpdateExpertDTOImp) {
     return this.service.update(id, updateExpertDTO);
   }
 
   @Delete('/:id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id') id: string) {
     return this.service.delete(id);
   }
 }

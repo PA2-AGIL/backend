@@ -18,21 +18,21 @@ export class AnswerService {
     return this.repository.getAnswers();
   }
 
-  async getByID(id: number) {
+  async getByID(id: string) {
     return this.repository.getByID(id);
   }
 
-  async create(createAnswerDTO: CreateAnswerDTOImp, questionId: number) {
+  async create(createAnswerDTO: CreateAnswerDTOImp, questionId: string) {
     const question = await this.questionRepository.getByID(questionId);
 
     return this.repository.createAnswer(createAnswerDTO, question);
   }
 
-  async update(id: number, updateAnswerDTO: UpdateAnswerDTOImp) {
+  async update(id: string, updateAnswerDTO: UpdateAnswerDTOImp) {
     return this.repository.updateAnswer(id, updateAnswerDTO);
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     return this.repository.deleteAnswer(id);
   }
 }

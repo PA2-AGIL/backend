@@ -11,7 +11,7 @@ export class ProducerRepository extends Repository<Producer> {
     return producers;
   }
 
-  async getByID(id: number) {
+  async getByID(id: string) {
     return await this.findOne({ id });
   }
 
@@ -31,7 +31,7 @@ export class ProducerRepository extends Repository<Producer> {
     return producer;
   }
 
-  async updateProducer(id: number, updateProducertDTO: UpdateProducerDTO) {
+  async updateProducer(id: string, updateProducertDTO: UpdateProducerDTO) {
     const producer = await this.getByID(id);
 
     const { address, phone, password, email, name } = updateProducertDTO;
@@ -47,7 +47,7 @@ export class ProducerRepository extends Repository<Producer> {
     return producer;
   }
 
-  async deleteProducer(id: number) {
+  async deleteProducer(id: string) {
     return this.delete({ id });
   }
 }

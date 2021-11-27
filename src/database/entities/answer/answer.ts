@@ -11,8 +11,8 @@ import { Question } from '../question/question';
 
 @Entity()
 export class Answer extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   content: string;

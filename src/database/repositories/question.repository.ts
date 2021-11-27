@@ -13,7 +13,7 @@ export class QuestionRepository extends Repository<Question> {
     return questions;
   }
 
-  async getByID(id: number) {
+  async getByID(id: string) {
     const question = await this.findOne({ id });
 
     if (!question) {
@@ -42,7 +42,7 @@ export class QuestionRepository extends Repository<Question> {
     return question;
   }
 
-  async updateQuestion(id: number, updateQuestionDTO: UpdateQuestionDTO) {
+  async updateQuestion(id: string, updateQuestionDTO: UpdateQuestionDTO) {
     const question = await this.getByID(id);
     const { title, closed, content } = updateQuestionDTO;
 
@@ -55,7 +55,7 @@ export class QuestionRepository extends Repository<Question> {
     return question;
   }
 
-  async deleteQuestion(id: number) {
+  async deleteQuestion(id: string) {
     return this.delete({ id });
   }
 }

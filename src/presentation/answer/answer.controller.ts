@@ -22,28 +22,28 @@ export class AnswerController {
   }
 
   @Get('/:id')
-  getByID(@Param('id', ParseIntPipe) id: number) {
+  getByID(@Param('id') id: string) {
     return this.service.getByID(id);
   }
 
   @Post('/:questionId')
   create(
     @Body() createAnswerDTO: CreateAnswerDTOImp,
-    @Param('questionId', ParseIntPipe) questionId: number,
+    @Param('questionId') questionId: string,
   ) {
     return this.service.create(createAnswerDTO, questionId);
   }
 
   @Put('/:id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
     @Body() updateAnswerDTO: UpdateAnswerDTOImp,
   ) {
     return this.service.update(id, updateAnswerDTO);
   }
 
   @Delete('/:id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id', ParseIntPipe) id: string) {
     return this.service.delete(id);
   }
 }
