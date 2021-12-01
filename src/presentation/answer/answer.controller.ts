@@ -8,11 +8,13 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AnswerService } from './answer.service';
 import { CreateAnswerDTOImp } from './dto/createAnswerDTO';
 import { UpdateAnswerDTOImp } from './dto/updateAnswerDTO';
 
 @Controller('answer')
+@ApiTags('answer')
 export class AnswerController {
   constructor(private readonly service: AnswerService) {}
 

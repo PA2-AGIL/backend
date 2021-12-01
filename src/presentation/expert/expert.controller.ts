@@ -4,15 +4,16 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateExpertDTOImp } from './dtos/createExpertDTO';
 import { UpdateExpertDTOImp } from './dtos/updateExpertDTO';
 import { ExpertService } from './expert.service';
 
 @Controller('expert')
+@ApiTags('expert')
 export class ExpertController {
   constructor(private readonly service: ExpertService) {}
 

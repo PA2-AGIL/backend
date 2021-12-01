@@ -11,11 +11,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTOImp';
 import { QuestionService } from './question.service';
 
 @Controller('question')
+@ApiTags('question')
 export class QuestionController {
   constructor(private readonly service: QuestionService) {}
 

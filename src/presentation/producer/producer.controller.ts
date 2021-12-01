@@ -4,15 +4,16 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateProducerDTOImp } from './dtos/createProducerDTO';
 import { UpdateProducerDTOImp } from './dtos/updateProducerDTO';
 import { ProducerService } from './producer.service';
 
 @Controller('producer')
+@ApiTags('producer')
 export class ProducerController {
   constructor(private readonly service: ProducerService) {}
 
