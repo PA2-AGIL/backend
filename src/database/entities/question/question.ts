@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   BaseEntity,
   Column,
@@ -14,15 +15,19 @@ import { Producer } from '../producer/producer';
 
 @Entity()
 export class Question extends BaseEntity {
+  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty()
   @Column()
   title: string;
 
+  @ApiProperty()
   @Column()
   content: string;
 
+  @ApiProperty()
   @Column({ default: false, nullable: false })
   closed: boolean;
 
@@ -35,11 +40,13 @@ export class Question extends BaseEntity {
   @OneToMany(() => File, (file) => file.question, { lazy: true })
   files: File[];
 
+  @ApiProperty()
   @CreateDateColumn({
     type: 'timestamp',
   })
   created_at: Date;
 
+  @ApiProperty()
   @UpdateDateColumn({
     type: 'timestamp',
   })
