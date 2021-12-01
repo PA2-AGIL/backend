@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   BaseEntity,
   Column,
@@ -9,12 +10,15 @@ import { Question } from '../question/question';
 
 @Entity()
 export class File extends BaseEntity {
+  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty()
   @Column()
   fileName: string;
 
+  @ApiProperty()
   @Column()
   url: string;
 

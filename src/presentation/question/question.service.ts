@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionRepository } from 'src/database/repositories/question.repository';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
-import { UpdateQuestionDTOImp } from './dto/updateQuestionDTOImp';
+import { UpdateQuestionDTOImp } from './dto/updateQuestionDTO';
 import { ProducerRepository } from 'src/database/repositories/producer.repository';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
 

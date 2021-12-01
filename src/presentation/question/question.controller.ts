@@ -11,24 +11,37 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import {
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Question } from 'src/database/entities/question/question';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
-import { UpdateQuestionDTOImp } from './dto/updateQuestionDTOImp';
+import { UpdateQuestionDTOImp } from './dto/updateQuestionDTO';
 import { QuestionService } from './question.service';
 
 @Controller('question')
+@ApiTags('question')
 export class QuestionController {
   constructor(private readonly service: QuestionService) {}
 
+  @ApiOkResponse({ type: Question, isArray: true })
   @Get()
   getQuestions() {
     return this.service.getQuestions();
   }
 
+  @ApiOkResponse({ type: Question })
+  @ApiNotFoundResponse()
   @Get('/:id')
   getByID(@Param('id') id: string) {
     return this.service.getByID(id);
   }
 
+  @ApiCreatedResponse({ type: Question })
+  @ApiNotFoundResponse()
   @Post('/:ownerId')
   @UseInterceptors(FilesInterceptor('files'))
   create(
@@ -39,6 +52,8 @@ export class QuestionController {
     return this.service.create(createQuestion, files, ownerId);
   }
 
+  @ApiCreatedResponse({ type: Question })
+  @ApiNotFoundResponse()
   @Put('/:id')
   update(
     @Param('id', ParseIntPipe) id: string,
@@ -47,6 +62,8 @@ export class QuestionController {
     return this.service.update(id, updateQuestion);
   }
 
+  @ApiOkResponse({ type: Question })
+  @ApiNotFoundResponse()
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: string) {
     return this.service.delete(id);
