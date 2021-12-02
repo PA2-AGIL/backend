@@ -15,7 +15,10 @@ export class ProducerRepository extends Repository<Producer> {
     return await this.findOne({ id });
   }
 
-  async createProducer(createProducerDTO: CreateProducerDTO) {
+  async createProducer(
+    createProducerDTO: CreateProducerDTO,
+    profilePicture: string,
+  ) {
     const { name, phone, password, email, address } = createProducerDTO;
 
     const producer = new Producer();
@@ -25,6 +28,7 @@ export class ProducerRepository extends Repository<Producer> {
     producer.phone = phone;
     producer.email = email;
     producer.password = password;
+    producer.profilePicture = profilePicture;
 
     await producer.save();
 

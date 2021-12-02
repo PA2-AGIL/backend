@@ -6,7 +6,10 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -38,8 +41,12 @@ export class ExpertController {
 
   @ApiCreatedResponse({ type: Expert })
   @Post()
-  create(@Body() createExpertDTO: CreateExpertDTOImp) {
-    return this.service.create(createExpertDTO);
+  @UseInterceptors(FileInterceptor('profilePicture'))
+  create(
+    @Body() createExpertDTO: CreateExpertDTOImp,
+    @UploadedFile() profilePicture: Express.Multer.File,
+  ) {
+    return this.service.create(createExpertDTO, profilePicture);
   }
 
   @ApiCreatedResponse({ type: Expert })

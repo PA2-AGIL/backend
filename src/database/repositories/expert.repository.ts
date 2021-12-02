@@ -15,7 +15,7 @@ export class expertRespository extends Repository<Expert> {
     return await this.findOne({ id });
   }
 
-  async createExpert(createExpertDTO: CreateExpertDTO) {
+  async createExpert(createExpertDTO: CreateExpertDTO, profilePicture: string) {
     const { name, phone, password, email, address, type } = createExpertDTO;
 
     const expert = new Expert();
@@ -26,6 +26,7 @@ export class expertRespository extends Repository<Expert> {
     expert.email = email;
     expert.type = type;
     expert.password = password;
+    expert.profilePicture = profilePicture;
 
     await expert.save();
 

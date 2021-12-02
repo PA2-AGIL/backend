@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ExpertType } from 'src/database/entities/expert/expert-type.enum';
 import { UpdateExpertDTO } from 'src/database/repositories/dtos/updateExpertDTO.interface';
 import { expertRespository } from 'src/database/repositories/expert.repository';
+import { FileUploadService } from 'src/service/file-upload/file-upload.service';
 import { CreateExpertDTOImp } from './dtos/createExpertDTO';
 
 @Injectable()
@@ -10,6 +11,7 @@ export class ExpertService {
   constructor(
     @InjectRepository(expertRespository)
     private repository: expertRespository,
+    private readonly fileUploadService: FileUploadService,
   ) {}
 
   async getExperts() {
@@ -20,7 +22,14 @@ export class ExpertService {
     return this.repository.getById(id);
   }
 
-  async create(createExpertDTO: CreateExpertDTOImp) {
+  async create(
+    createExpertDTO: CreateExpertDTOImp,
+    profilePicture: Express.Multer.File,
+  ) {
+    if (!profilePicture) {
+      throw new BadRequestException('Imagem é obrigatório');
+    }
+
     const { type } = createExpertDTO;
 
     const isValidType = Object.values(ExpertType).find(
@@ -31,7 +40,12 @@ export class ExpertService {
       throw new BadRequestException('Tipo do Especialista é inválido');
     }
 
-    return this.repository.createExpert(createExpertDTO);
+    const { url } = await this.fileUploadService.uploadPictureProfile(
+      profilePicture.buffer,
+      profilePicture.originalname,
+    );
+
+    return this.repository.createExpert(createExpertDTO, url);
   }
 
   async update(id: string, updateExpertDTO: UpdateExpertDTO) {

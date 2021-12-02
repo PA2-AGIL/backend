@@ -6,7 +6,10 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -38,8 +41,12 @@ export class ProducerController {
 
   @ApiCreatedResponse({ type: Producer })
   @Post()
-  create(@Body() createProducerDTO: CreateProducerDTOImp) {
-    return this.service.create(createProducerDTO);
+  @UseInterceptors(FileInterceptor('profilePicture'))
+  create(
+    @Body() createProducerDTO: CreateProducerDTOImp,
+    @UploadedFile() profilePicture: Express.Multer.File,
+  ) {
+    return this.service.create(createProducerDTO, profilePicture);
   }
 
   @ApiCreatedResponse({ type: Producer })

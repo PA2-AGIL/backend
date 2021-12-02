@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FileUploadService } from 'src/service/file-upload/file-upload.service';
 import { ProducerRepository } from '../../database/repositories/producer.repository';
 import { CreateProducerDTOImp } from './dtos/createProducerDTO';
 import { UpdateProducerDTOImp } from './dtos/updateProducerDTO';
@@ -9,6 +10,7 @@ export class ProducerService {
   constructor(
     @InjectRepository(ProducerRepository)
     private repository: ProducerRepository,
+    private readonly fileUploadService: FileUploadService,
   ) {}
 
   async getProducers() {
@@ -19,8 +21,20 @@ export class ProducerService {
     return this.repository.getByID(id);
   }
 
-  async create(createProducerDTO: CreateProducerDTOImp) {
-    return this.repository.createProducer(createProducerDTO);
+  async create(
+    createProducerDTO: CreateProducerDTOImp,
+    profilePicture: Express.Multer.File,
+  ) {
+    if (!profilePicture) {
+      throw new BadRequestException('Imagem é obrigatório');
+    }
+
+    const { url } = await this.fileUploadService.uploadPictureProfile(
+      profilePicture.buffer,
+      profilePicture.originalname,
+    );
+
+    return this.repository.createProducer(createProducerDTO, url);
   }
 
   async update(id: string, updateProducerDTO: UpdateProducerDTOImp) {
