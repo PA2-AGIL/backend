@@ -9,5 +9,6 @@ import { ExpertService } from './expert.service';
   imports: [TypeOrmModule.forFeature([expertRespository]), FileUploadModule],
   controllers: [ExpertController],
   providers: [ExpertService],
+  exports: [ExpertService],
 })
 export class ExpertModule {}

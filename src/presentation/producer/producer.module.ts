@@ -9,5 +9,6 @@ import { FileUploadModule } from 'src/service/file-upload/file-upload.module';
   imports: [TypeOrmModule.forFeature([ProducerRepository]), FileUploadModule],
   providers: [ProducerService],
   controllers: [ProducerController],
+  exports: [ProducerService],
 })
 export class ProducerModule {}

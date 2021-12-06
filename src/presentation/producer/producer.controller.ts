@@ -40,16 +40,6 @@ export class ProducerController {
   }
 
   @ApiCreatedResponse({ type: Producer })
-  @Post()
-  @UseInterceptors(FileInterceptor('profilePicture'))
-  create(
-    @Body() createProducerDTO: CreateProducerDTOImp,
-    @UploadedFile() profilePicture: Express.Multer.File,
-  ) {
-    return this.service.create(createProducerDTO, profilePicture);
-  }
-
-  @ApiCreatedResponse({ type: Producer })
   @ApiNotFoundResponse()
   @Put('/:id')
   update(

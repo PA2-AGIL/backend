@@ -8,6 +8,7 @@ import { ExpertModule } from './presentation/expert/expert.module';
 import { QuestionModule } from './presentation/question/question.module';
 import { AnswerModule } from './presentation/answer/answer.module';
 import { FileUploadModule } from './service/file-upload/file-upload.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FileUploadModule } from './service/file-upload/file-upload.module';
     QuestionModule,
     AnswerModule,
     FileUploadModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
