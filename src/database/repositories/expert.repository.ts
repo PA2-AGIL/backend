@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { genSalt, hash } from 'bcrypt';
 import { Expert } from '../entities/expert/expert';
 import { CreateExpertDTO } from './dtos/createExpertDTO.interface';
 import { UpdateExpertDTO } from './dtos/updateExpertDTO.interface';
@@ -25,7 +26,8 @@ export class expertRespository extends Repository<Expert> {
     expert.phone = phone;
     expert.email = email;
     expert.type = type;
-    expert.password = password;
+    expert.salt = await genSalt();
+    expert.password = await hash(password, expert.salt);
     expert.profilePicture = profilePicture;
 
     await expert.save();

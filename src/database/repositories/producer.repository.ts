@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Producer } from '../entities/producer/producer';
+import { genSalt, hash } from 'bcrypt';
 import { CreateProducerDTO } from './dtos/createProducerDTO.interface';
 import { UpdateProducerDTO } from './dtos/updateProducerDTO.interface';
 
@@ -27,7 +28,8 @@ export class ProducerRepository extends Repository<Producer> {
     producer.address = address;
     producer.phone = phone;
     producer.email = email;
-    producer.password = password;
+    producer.salt = await genSalt();
+    producer.password = await hash(password, producer.salt);
     producer.profilePicture = profilePicture;
 
     await producer.save();
