@@ -38,5 +38,15 @@ export class AuthService {
     return this.producerService.create(CreateProducerDTO, picture);
   }
 
-  // async signInProducer() {}
+  async signInProducer(signInDTO: SignInDTO) {
+    const { email, password } = signInDTO;
+
+    const producerSignIn = await this.producerService.validate(email, password);
+
+    if (!producerSignIn) {
+      throw new UnauthorizedException('Credênciais Inválidas');
+    }
+
+    return producerSignIn;
+  }
 }

@@ -43,4 +43,9 @@ export class AuthController {
   ) {
     return this.service.signUpProducer(createProducerDTO, profilePicture);
   }
+
+  @Post('/signin/producer')
+  signInProducer(@Body() signInDTO: SignInDTO) {
+    return this.service.signInProducer(signInDTO);
+  }
 }

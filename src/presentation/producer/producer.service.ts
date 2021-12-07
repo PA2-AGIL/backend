@@ -44,4 +44,8 @@ export class ProducerService {
   async delete(id: string) {
     return this.repository.deleteProducer(id);
   }
+
+  async validate(email: string, password: string) {
+    return this.repository.validate(email, password);
+  }
 }
