@@ -55,4 +55,8 @@ export class ExpertService {
   async delete(id: string) {
     return this.repository.deleteExpert(id);
   }
+
+  async validate(email: string, password: string) {
+    return this.repository.validate(email, password);
+  }
 }

@@ -12,6 +12,7 @@ import { Producer } from 'src/database/entities/producer/producer';
 import { CreateExpertDTOImp } from 'src/presentation/expert/dtos/createExpertDTO';
 import { CreateProducerDTOImp } from 'src/presentation/producer/dtos/createProducerDTO';
 import { AuthService } from './auth.service';
+import { SignInDTO } from './dto/signInDTO';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -26,6 +27,11 @@ export class AuthController {
     @UploadedFile() profilePicture: Express.Multer.File,
   ) {
     return this.service.singUpExpert(createExpertDTO, profilePicture);
+  }
+
+  @Post('/signin/expert')
+  signInExpert(@Body() signInDTO: SignInDTO) {
+    return this.service.signInExpert(signInDTO);
   }
 
   @ApiCreatedResponse({ type: Producer })

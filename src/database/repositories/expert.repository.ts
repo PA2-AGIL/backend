@@ -3,6 +3,7 @@ import { genSalt, hash } from 'bcrypt';
 import { Expert } from '../entities/expert/expert';
 import { CreateExpertDTO } from './dtos/createExpertDTO.interface';
 import { UpdateExpertDTO } from './dtos/updateExpertDTO.interface';
+import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Expert)
 export class expertRespository extends Repository<Expert> {
@@ -54,5 +55,21 @@ export class expertRespository extends Repository<Expert> {
 
   async deleteExpert(id: string) {
     return this.delete({ id });
+  }
+
+  async validate(email: string, password: string) {
+    const expertFounded = await this.findOne({ email });
+
+    if (!expertFounded) {
+      throw new NotFoundException('Especialista não encontrado');
+    }
+
+    const hashed = await hash(password, expertFounded.salt);
+
+    if (hashed === expertFounded.password) {
+      return expertFounded;
+    } else {
+      return null;
+    }
   }
 }
