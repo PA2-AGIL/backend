@@ -1,9 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ExpertService } from 'src/presentation/expert/expert.service';
 import { ProducerService } from 'src/presentation/producer/producer.service';
 import { JwtPayload } from './payload.interface';
 
+@Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly producerService: ProducerService,
@@ -11,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'Pa2Agil',
+      secretOrKey: '' + process.env.SECRET_KEY,
     });
   }
 
