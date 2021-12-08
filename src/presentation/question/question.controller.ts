@@ -19,6 +19,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { GetUser } from 'src/auth/get-user.decorator';
 import { Question } from 'src/database/entities/question/question';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTO';
@@ -51,7 +52,9 @@ export class QuestionController {
     @Body() createQuestion: CreateQuestionDTOImp,
     @UploadedFiles() files: Express.Multer.File[],
     @Param('ownerId') ownerId: string,
+    @GetUser() user,
   ) {
+    console.log(user);
     return this.service.create(createQuestion, files, ownerId);
   }
 
