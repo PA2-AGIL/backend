@@ -18,7 +18,7 @@ import { JwtStrategy } from './jwtStrategy';
       defaultStrategy: 'jwt',
     }),
     JwtModule.register({
-      secret: '' + process.env.SECRET_KEY,
+      secret: 'Pa2Agil',
       signOptions: {
         expiresIn: '1d',
       },
