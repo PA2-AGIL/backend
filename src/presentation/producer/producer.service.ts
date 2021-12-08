@@ -21,6 +21,10 @@ export class ProducerService {
     return this.repository.getByID(id);
   }
 
+  async getByEmail(email: string) {
+    return this.repository.getByEmail(email);
+  }
+
   async create(
     createProducerDTO: CreateProducerDTOImp,
     profilePicture: Express.Multer.File,
@@ -43,5 +47,9 @@ export class ProducerService {
 
   async delete(id: string) {
     return this.repository.deleteProducer(id);
+  }
+
+  async validate(email: string, password: string) {
+    return this.repository.validate(email, password);
   }
 }

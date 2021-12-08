@@ -40,16 +40,6 @@ export class ExpertController {
   }
 
   @ApiCreatedResponse({ type: Expert })
-  @Post()
-  @UseInterceptors(FileInterceptor('profilePicture'))
-  create(
-    @Body() createExpertDTO: CreateExpertDTOImp,
-    @UploadedFile() profilePicture: Express.Multer.File,
-  ) {
-    return this.service.create(createExpertDTO, profilePicture);
-  }
-
-  @ApiCreatedResponse({ type: Expert })
   @ApiNotFoundResponse()
   @Put('/:id')
   update(@Param('id') id: string, @Body() updateExpertDTO: UpdateExpertDTOImp) {

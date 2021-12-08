@@ -8,8 +8,10 @@ import {
   Post,
   Put,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiCreatedResponse,
@@ -43,6 +45,7 @@ export class QuestionController {
   @ApiCreatedResponse({ type: Question })
   @ApiNotFoundResponse()
   @Post('/:ownerId')
+  @UseGuards(AuthGuard())
   @UseInterceptors(FilesInterceptor('files'))
   create(
     @Body() createQuestion: CreateQuestionDTOImp,

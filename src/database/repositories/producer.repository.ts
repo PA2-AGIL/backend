@@ -1,7 +1,9 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Producer } from '../entities/producer/producer';
+import { genSalt, hash } from 'bcrypt';
 import { CreateProducerDTO } from './dtos/createProducerDTO.interface';
 import { UpdateProducerDTO } from './dtos/updateProducerDTO.interface';
+import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Producer)
 export class ProducerRepository extends Repository<Producer> {
@@ -13,6 +15,10 @@ export class ProducerRepository extends Repository<Producer> {
 
   async getByID(id: string) {
     return await this.findOne({ id });
+  }
+
+  async getByEmail(email: string) {
+    return await this.findOne({ email });
   }
 
   async createProducer(
@@ -27,7 +33,8 @@ export class ProducerRepository extends Repository<Producer> {
     producer.address = address;
     producer.phone = phone;
     producer.email = email;
-    producer.password = password;
+    producer.salt = await genSalt();
+    producer.password = await hash(password, producer.salt);
     producer.profilePicture = profilePicture;
 
     await producer.save();
@@ -53,5 +60,21 @@ export class ProducerRepository extends Repository<Producer> {
 
   async deleteProducer(id: string) {
     return this.delete({ id });
+  }
+
+  async validate(email: string, password: string) {
+    const producerFounded = await this.findOne({ email });
+
+    if (!producerFounded) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const hashed = await hash(password, producerFounded.salt);
+
+    if (hashed === producerFounded.password) {
+      return producerFounded;
+    } else {
+      return null;
+    }
   }
 }

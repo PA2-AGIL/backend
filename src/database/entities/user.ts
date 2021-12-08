@@ -36,6 +36,9 @@ export class User extends BaseEntity {
   @Column()
   profilePicture: string;
 
+  @Column()
+  salt: string;
+
   @ApiProperty()
   @CreateDateColumn({
     type: 'timestamp',
