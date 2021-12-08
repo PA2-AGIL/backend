@@ -21,6 +21,10 @@ export class ProducerService {
     return this.repository.getByID(id);
   }
 
+  async getByEmail(email: string) {
+    return this.repository.getByEmail(email);
+  }
+
   async create(
     createProducerDTO: CreateProducerDTOImp,
     profilePicture: Express.Multer.File,

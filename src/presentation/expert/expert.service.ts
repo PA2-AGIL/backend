@@ -22,6 +22,10 @@ export class ExpertService {
     return this.repository.getById(id);
   }
 
+  async getByEmail(email: string) {
+    return this.repository.getByEmail(email);
+  }
+
   async create(
     createExpertDTO: CreateExpertDTOImp,
     profilePicture: Express.Multer.File,

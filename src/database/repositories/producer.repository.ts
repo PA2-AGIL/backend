@@ -17,6 +17,10 @@ export class ProducerRepository extends Repository<Producer> {
     return await this.findOne({ id });
   }
 
+  async getByEmail(email: string) {
+    return await this.findOne({ email });
+  }
+
   async createProducer(
     createProducerDTO: CreateProducerDTO,
     profilePicture: string,

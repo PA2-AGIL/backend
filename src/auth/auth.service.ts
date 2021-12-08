@@ -1,15 +1,18 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { CreateExpertDTOImp } from 'src/presentation/expert/dtos/createExpertDTO';
 import { ExpertService } from 'src/presentation/expert/expert.service';
 import { CreateProducerDTOImp } from 'src/presentation/producer/dtos/createProducerDTO';
 import { ProducerService } from 'src/presentation/producer/producer.service';
 import { SignInDTO } from './dto/signInDTO';
+import { JwtPayload } from './payload.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly expertService: ExpertService,
     private readonly producerService: ProducerService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async singUpExpert(
@@ -28,7 +31,10 @@ export class AuthService {
       throw new UnauthorizedException('Credênciais Inválidas');
     }
 
-    return expertSignIn;
+    const payload: JwtPayload = { email: expertSignIn.email };
+    const accessToken = this.jwtService.sign(payload);
+
+    return { accessToken };
   }
 
   async signUpProducer(
@@ -47,6 +53,9 @@ export class AuthService {
       throw new UnauthorizedException('Credênciais Inválidas');
     }
 
-    return producerSignIn;
+    const payload: JwtPayload = { email: producerSignIn.email };
+    const accessToken = this.jwtService.sign(payload);
+
+    return { accessToken };
   }
 }
