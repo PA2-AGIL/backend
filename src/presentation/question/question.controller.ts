@@ -61,6 +61,7 @@ export class QuestionController {
   @ApiCreatedResponse({ type: Question })
   @ApiNotFoundResponse()
   @Put('/:id')
+  @UseGuards(AuthGuard())
   update(
     @Param('id', ParseIntPipe) id: string,
     @Body() updateQuestion: UpdateQuestionDTOImp,
@@ -71,6 +72,7 @@ export class QuestionController {
   @ApiOkResponse({ type: Question })
   @ApiNotFoundResponse()
   @Delete('/:id')
+  @UseGuards(AuthGuard())
   delete(@Param('id', ParseIntPipe) id: string) {
     return this.service.delete(id);
   }

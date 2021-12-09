@@ -4,12 +4,10 @@ import {
   Delete,
   Get,
   Param,
-  Post,
   Put,
-  UploadedFile,
-  UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -17,7 +15,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Producer } from 'src/database/entities/producer/producer';
-import { CreateProducerDTOImp } from './dtos/createProducerDTO';
 import { UpdateProducerDTOImp } from './dtos/updateProducerDTO';
 import { ProducerService } from './producer.service';
 
@@ -42,6 +39,7 @@ export class ProducerController {
   @ApiCreatedResponse({ type: Producer })
   @ApiNotFoundResponse()
   @Put('/:id')
+  @UseGuards(AuthGuard())
   update(
     @Param('id') id: string,
     @Body() updateProducerDTO: UpdateProducerDTOImp,
@@ -52,6 +50,7 @@ export class ProducerController {
   @ApiOkResponse({ type: Producer })
   @ApiNotFoundResponse()
   @Delete('/:id')
+  @UseGuards(AuthGuard())
   delete(@Param('id') id: string) {
     return this.service.delete(id);
   }

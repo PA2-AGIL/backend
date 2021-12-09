@@ -7,7 +7,9 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -40,6 +42,7 @@ export class AnswerController {
   @ApiCreatedResponse({ type: Answer })
   @ApiNotFoundResponse()
   @Post('/:questionId')
+  @UseGuards(AuthGuard())
   create(
     @Body() createAnswerDTO: CreateAnswerDTOImp,
     @Param('questionId') questionId: string,
@@ -50,6 +53,7 @@ export class AnswerController {
   @ApiCreatedResponse({ type: Answer })
   @ApiNotFoundResponse()
   @Put('/:id')
+  @UseGuards(AuthGuard())
   update(
     @Param('id', ParseIntPipe) id: string,
     @Body() updateAnswerDTO: UpdateAnswerDTOImp,
@@ -60,6 +64,7 @@ export class AnswerController {
   @ApiOkResponse({ type: Answer })
   @ApiNotFoundResponse()
   @Delete('/:id')
+  @UseGuards(AuthGuard())
   delete(@Param('id', ParseIntPipe) id: string) {
     return this.service.delete(id);
   }

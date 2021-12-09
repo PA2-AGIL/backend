@@ -4,12 +4,10 @@ import {
   Delete,
   Get,
   Param,
-  Post,
   Put,
-  UploadedFile,
-  UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -17,7 +15,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Expert } from 'src/database/entities/expert/expert';
-import { CreateExpertDTOImp } from './dtos/createExpertDTO';
 import { UpdateExpertDTOImp } from './dtos/updateExpertDTO';
 import { ExpertService } from './expert.service';
 
@@ -42,6 +39,7 @@ export class ExpertController {
   @ApiCreatedResponse({ type: Expert })
   @ApiNotFoundResponse()
   @Put('/:id')
+  @UseGuards(AuthGuard())
   update(@Param('id') id: string, @Body() updateExpertDTO: UpdateExpertDTOImp) {
     return this.service.update(id, updateExpertDTO);
   }
@@ -49,6 +47,7 @@ export class ExpertController {
   @ApiOkResponse({ type: Expert })
   @ApiNotFoundResponse()
   @Delete('/:id')
+  @UseGuards(AuthGuard())
   delete(@Param('id') id: string) {
     return this.service.delete(id);
   }
