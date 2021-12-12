@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Like, Repository } from 'typeorm';
 import { Answer } from '../entities/answer/answer';
 import { Question } from '../entities/question/question';
 import { CreateAnswerDTO } from './dtos/createAnswerDTO.interface';
@@ -6,10 +6,14 @@ import { UpdateAnswerDTO } from './dtos/updateAnswerDTO.interface';
 
 @EntityRepository(Answer)
 export class AnswerRepository extends Repository<Answer> {
-  async getAnswers() {
-    const answers = await this.find();
-
-    return answers;
+  async getAnswers(query: string) {
+    if (query) {
+      return await this.find({
+        where: { content: Like(`%${query}%`) },
+      });
+    } else {
+      return await this.find();
+    }
   }
 
   async getByID(id: string) {

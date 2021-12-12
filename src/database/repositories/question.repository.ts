@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, ILike, Repository } from 'typeorm';
 import { File } from '../entities/file/file';
 import { Producer } from '../entities/producer/producer';
 import { Question } from '../entities/question/question';
@@ -7,10 +7,17 @@ import { UpdateQuestionDTO } from './dtos/updateQuestionDTO.interface';
 
 @EntityRepository(Question)
 export class QuestionRepository extends Repository<Question> {
-  async getQuestions() {
-    const questions = await this.find();
-
-    return questions;
+  async getQuestions(query: string) {
+    if (query) {
+      return await this.find({
+        where: [
+          { title: ILike(`%${query}%`) },
+          { content: ILike(`%${query}%`) },
+        ],
+      });
+    } else {
+      return await this.find();
+    }
   }
 
   async getByID(id: string) {

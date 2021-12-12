@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
+import { Producer } from 'src/database/entities/producer/producer';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
 import { ProducerRepository } from '../../database/repositories/producer.repository';
 import { CreateProducerDTOImp } from './dtos/createProducerDTO';
@@ -13,8 +15,8 @@ export class ProducerService {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  async getProducers() {
-    return this.repository.getProducers();
+  async getProducers(query: string) {
+    return this.repository.getProducers(query);
   }
 
   async getByID(id: string) {
@@ -51,5 +53,9 @@ export class ProducerService {
 
   async validate(email: string, password: string) {
     return this.repository.validate(email, password);
+  }
+
+  async paginate(ops: IPaginationOptions) {
+    return await paginate<Producer>(this.repository, ops);
   }
 }

@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, ILike, Repository } from 'typeorm';
 import { Producer } from '../entities/producer/producer';
 import { genSalt, hash } from 'bcrypt';
 import { CreateProducerDTO } from './dtos/createProducerDTO.interface';
@@ -7,10 +7,14 @@ import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Producer)
 export class ProducerRepository extends Repository<Producer> {
-  async getProducers() {
-    const producers = await this.find();
-
-    return producers;
+  async getProducers(query: string) {
+    if (query) {
+      return await this.find({
+        where: [{ name: ILike(`%${query}%`) }, { email: ILike(`%${query}%`) }],
+      });
+    } else {
+      return await this.find();
+    }
   }
 
   async getByID(id: string) {
