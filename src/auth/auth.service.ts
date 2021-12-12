@@ -31,7 +31,10 @@ export class AuthService {
       throw new UnauthorizedException('Credênciais Inválidas');
     }
 
-    const payload: JwtPayload = { email: expertSignIn.email };
+    const payload: JwtPayload = {
+      id: expertSignIn.id,
+      email: expertSignIn.email,
+    };
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken };
@@ -53,7 +56,10 @@ export class AuthService {
       throw new UnauthorizedException('Credênciais Inválidas');
     }
 
-    const payload: JwtPayload = { email: producerSignIn.email };
+    const payload: JwtPayload = {
+      id: producerSignIn.id,
+      email: producerSignIn.email,
+    };
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken };
