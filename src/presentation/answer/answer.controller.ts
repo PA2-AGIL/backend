@@ -34,6 +34,11 @@ export class AnswerController {
     return this.service.paginate({ page, limit });
   }
 
+  @Get('/all')
+  getAllAnswers(@Query('query') query: string) {
+    return this.service.getAnswers(query);
+  }
+
   @ApiOkResponse({ type: Answer })
   @ApiNotFoundResponse()
   @Get('/:id')
@@ -69,10 +74,5 @@ export class AnswerController {
   @UseGuards(AuthGuard())
   delete(@Param('id', ParseIntPipe) id: string) {
     return this.service.delete(id);
-  }
-
-  @Get('/all')
-  getAllAnswers() {
-    return this.service.getAnswers();
   }
 }

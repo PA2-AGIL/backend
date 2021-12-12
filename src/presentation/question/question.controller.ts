@@ -38,6 +38,11 @@ export class QuestionController {
     return this.service.paginate({ page, limit });
   }
 
+  @Get('/all')
+  getAllQuestions(@Query('query') query: string) {
+    return this.service.getQuestions(query);
+  }
+
   @ApiOkResponse({ type: Question })
   @ApiNotFoundResponse()
   @Get('/:id')
@@ -77,10 +82,5 @@ export class QuestionController {
   @UseGuards(AuthGuard())
   delete(@Param('id', ParseIntPipe) id: string) {
     return this.service.delete(id);
-  }
-
-  @Get('/all')
-  getAllQuestions() {
-    return this.service.getQuestions();
   }
 }

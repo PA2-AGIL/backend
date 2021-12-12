@@ -31,6 +31,11 @@ export class ExpertController {
     return this.service.paginate({ page, limit });
   }
 
+  @Get('/all')
+  getAllExperts(@Query('query') query: string) {
+    return this.service.getExperts(query);
+  }
+
   @ApiOkResponse({ type: Expert })
   @ApiNotFoundResponse()
   @Get('/:id')
@@ -52,10 +57,5 @@ export class ExpertController {
   @UseGuards(AuthGuard())
   delete(@Param('id') id: string) {
     return this.service.delete(id);
-  }
-
-  @Get('/all')
-  getAllExperts() {
-    return this.service.getExperts();
   }
 }

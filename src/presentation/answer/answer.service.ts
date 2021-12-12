@@ -16,8 +16,8 @@ export class AnswerService {
     private readonly questionRepository: QuestionRepository,
   ) {}
 
-  async getAnswers() {
-    return this.repository.getAnswers();
+  async getAnswers(query: string) {
+    return this.repository.getAnswers(query);
   }
 
   async getByID(id: string) {

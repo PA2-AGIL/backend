@@ -15,8 +15,8 @@ export class ProducerService {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  async getProducers() {
-    return this.repository.getProducers();
+  async getProducers(query: string) {
+    return this.repository.getProducers(query);
   }
 
   async getByID(id: string) {

@@ -16,8 +16,8 @@ export class ExpertService {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  async getExperts() {
-    return this.repository.getExperts();
+  async getExperts(query: string) {
+    return this.repository.getExperts(query);
   }
 
   async getByID(id: string) {

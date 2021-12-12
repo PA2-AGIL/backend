@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, ILike, Repository } from 'typeorm';
 import { genSalt, hash } from 'bcrypt';
 import { Expert } from '../entities/expert/expert';
 import { CreateExpertDTO } from './dtos/createExpertDTO.interface';
@@ -7,10 +7,18 @@ import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Expert)
 export class expertRespository extends Repository<Expert> {
-  async getExperts() {
-    const experts = await this.find();
-
-    return experts;
+  async getExperts(query: string) {
+    if (query) {
+      return await this.find({
+        where: [
+          { name: ILike(`%${query}%`) },
+          { email: ILike(`%${query}%`) },
+          { type: ILike(`%${query}%`) },
+        ],
+      });
+    } else {
+      return await this.find();
+    }
   }
 
   async getById(id: string) {

@@ -34,6 +34,11 @@ export class ProducerController {
     });
   }
 
+  @Get('/all')
+  getAllProducers(@Query('query') query: string) {
+    return this.service.getProducers(query);
+  }
+
   @ApiOkResponse({ type: Producer })
   @ApiNotFoundResponse()
   @Get('/:id')
@@ -58,10 +63,5 @@ export class ProducerController {
   @UseGuards(AuthGuard())
   delete(@Param('id') id: string) {
     return this.service.delete(id);
-  }
-
-  @Get('/all')
-  getAllProducers() {
-    return this.service.getProducers();
   }
 }

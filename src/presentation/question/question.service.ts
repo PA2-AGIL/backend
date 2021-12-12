@@ -18,8 +18,8 @@ export class QuestionService {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  async getQuestions() {
-    return this.repository.getQuestions();
+  async getQuestions(query: string) {
+    return this.repository.getQuestions(query);
   }
 
   async getByID(id: string) {
