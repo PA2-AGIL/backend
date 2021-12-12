@@ -14,7 +14,10 @@ export class QuestionRepository extends Repository<Question> {
   }
 
   async getByID(id: string) {
-    const question = await this.findOne({ id });
+    const question = await this.findOne(
+      { id },
+      { relations: ['answers', 'files'] },
+    );
 
     if (!question) {
       throw Error('Não foi possível encontrar essa questão');
