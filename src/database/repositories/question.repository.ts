@@ -10,7 +10,10 @@ export class QuestionRepository extends Repository<Question> {
   async getQuestions(query: string) {
     if (query) {
       return await this.find({
-        where: [{ title: ILike(`%${query}%`) }, { title: ILike(`%${query}%`) }],
+        where: [
+          { title: ILike(`%${query}%`) },
+          { content: ILike(`%${query}%`) },
+        ],
       });
     } else {
       return await this.find();
