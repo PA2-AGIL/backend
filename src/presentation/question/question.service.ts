@@ -5,6 +5,8 @@ import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTO';
 import { ProducerRepository } from 'src/database/repositories/producer.repository';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
+import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
+import { Question } from 'src/database/entities/question/question';
 
 @Injectable()
 export class QuestionService {
@@ -51,5 +53,9 @@ export class QuestionService {
 
   async delete(id: string) {
     return this.repository.deleteQuestion(id);
+  }
+
+  async paginate(ops: IPaginationOptions) {
+    return await paginate<Question>(this.repository, ops);
   }
 }

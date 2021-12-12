@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -25,8 +26,12 @@ export class ProducerController {
 
   @ApiOkResponse({ type: Producer, isArray: true })
   @Get()
-  getProducers() {
-    return this.service.getProducers();
+  getProducers(@Query('page') page = 1, @Query('limit') limit = 10) {
+    limit = limit > 100 ? 100 : limit;
+    return this.service.paginate({
+      page,
+      limit,
+    });
   }
 
   @ApiOkResponse({ type: Producer })
@@ -53,5 +58,10 @@ export class ProducerController {
   @UseGuards(AuthGuard())
   delete(@Param('id') id: string) {
     return this.service.delete(id);
+  }
+
+  @Get('/all')
+  getAllProducers() {
+    return this.service.getProducers();
   }
 }

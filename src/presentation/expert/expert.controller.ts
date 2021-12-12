@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -25,8 +26,9 @@ export class ExpertController {
 
   @ApiOkResponse({ type: Expert, isArray: true })
   @Get()
-  getExperts() {
-    return this.service.getExperts();
+  getExperts(@Query('page') page = 1, @Query('limit') limit = 10) {
+    limit = limit > 100 ? 100 : limit;
+    return this.service.paginate({ page, limit });
   }
 
   @ApiOkResponse({ type: Expert })
@@ -50,5 +52,10 @@ export class ExpertController {
   @UseGuards(AuthGuard())
   delete(@Param('id') id: string) {
     return this.service.delete(id);
+  }
+
+  @Get('/all')
+  getAllExperts() {
+    return this.service.getExperts();
   }
 }

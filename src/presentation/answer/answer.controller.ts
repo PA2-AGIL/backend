@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -28,8 +29,9 @@ export class AnswerController {
 
   @ApiOkResponse({ type: Answer, isArray: true })
   @Get()
-  getAnswers() {
-    return this.service.getAnswers();
+  getAnswers(@Query('page') page = 1, @Query('limit') limit = 10) {
+    limit = limit > 100 ? 100 : limit;
+    return this.service.paginate({ page, limit });
   }
 
   @ApiOkResponse({ type: Answer })
@@ -67,5 +69,10 @@ export class AnswerController {
   @UseGuards(AuthGuard())
   delete(@Param('id', ParseIntPipe) id: string) {
     return this.service.delete(id);
+  }
+
+  @Get('/all')
+  getAllAnswers() {
+    return this.service.getAnswers();
   }
 }

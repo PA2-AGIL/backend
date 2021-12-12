@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
+import { Answer } from 'src/database/entities/answer/answer';
 import { QuestionRepository } from 'src/database/repositories/question.repository';
 import { AnswerRepository } from '../../database/repositories/answer.repository';
 import { CreateAnswerDTOImp } from './dto/createAnswerDTO';
@@ -34,5 +36,9 @@ export class AnswerService {
 
   async delete(id: string) {
     return this.repository.deleteAnswer(id);
+  }
+
+  async paginate(ops: IPaginationOptions) {
+    return await paginate<Answer>(this.repository, ops);
   }
 }

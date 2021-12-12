@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -32,8 +33,9 @@ export class QuestionController {
 
   @ApiOkResponse({ type: Question, isArray: true })
   @Get()
-  getQuestions() {
-    return this.service.getQuestions();
+  getQuestions(@Query('page') page = 1, @Query('limit') limit = 10) {
+    limit = limit > 100 ? 100 : limit;
+    return this.service.paginate({ page, limit });
   }
 
   @ApiOkResponse({ type: Question })
@@ -75,5 +77,10 @@ export class QuestionController {
   @UseGuards(AuthGuard())
   delete(@Param('id', ParseIntPipe) id: string) {
     return this.service.delete(id);
+  }
+
+  @Get('/all')
+  getAllQuestions() {
+    return this.service.getQuestions();
   }
 }
