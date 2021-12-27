@@ -8,9 +8,7 @@ import { UpdateAnswerDTOImp } from './dto/updateAnswerDTO';
 @Injectable()
 export class AnswerService {
   constructor(
-    @InjectRepository(AnswerRepository)
     private readonly repository: AnswerRepository,
-    @InjectRepository(QuestionRepository)
     private readonly questionRepository: QuestionRepository,
   ) {}
 
