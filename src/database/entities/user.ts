@@ -3,13 +3,13 @@ import {
   BaseEntity,
   Column,
   CreateDateColumn,
-  PrimaryGeneratedColumn,
+  ObjectIdColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 export class User extends BaseEntity {
   @ApiProperty()
-  @PrimaryGeneratedColumn('uuid')
+  @ObjectIdColumn()
   id: string;
 
   @ApiProperty()
