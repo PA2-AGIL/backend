@@ -18,13 +18,10 @@ switch (process.env.NODE_ENV) {
     dotenv.config({ path: `./${process.env.NODE_ENV}.env` });
 
     Object.assign(dbConfig, {
-      type: 'postgres',
+      type: 'mongodb',
       host: process.env.TYPEORM_HOST,
       port: process.env.TYPEORM_PORT,
-      username: process.env.TYPEORM_USERNAME,
-      password: process.env.TYPEORM_PASSWORD,
       database: process.env.TYPEORM_DATABASE,
-      migrationsRun: true,
     });
     break;
   case 'test':
