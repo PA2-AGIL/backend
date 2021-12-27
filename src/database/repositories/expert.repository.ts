@@ -1,12 +1,19 @@
 import { EntityRepository, ILike, Repository } from 'typeorm';
 import { genSalt, hash } from 'bcrypt';
-import { Expert } from '../entities/expert/expert';
+import { Expert, ExpertType } from '../entities/expert/expert';
 import { CreateExpertDTO } from './dtos/createExpertDTO.interface';
 import { UpdateExpertDTO } from './dtos/updateExpertDTO.interface';
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
-@EntityRepository(Expert)
-export class expertRespository extends Repository<Expert> {
+@Injectable()
+export class expertRespository {
+  constructor(
+    @InjectModel(Expert.name)
+    private readonly model: Model<ExpertType>,
+  ) {}
+
   async getExperts(query: string) {
     if (query) {
       return await this.find({
