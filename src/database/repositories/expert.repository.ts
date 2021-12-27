@@ -1,4 +1,3 @@
-import { EntityRepository, ILike, Repository } from 'typeorm';
 import { genSalt, hash } from 'bcrypt';
 import { Expert, ExpertType } from '../entities/expert/expert';
 import { CreateExpertDTO } from './dtos/createExpertDTO.interface';
@@ -8,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 @Injectable()
-export class expertRespository {
+export class ExpertRespository {
   constructor(
     @InjectModel(Expert.name)
     private readonly model: Model<ExpertType>,
@@ -16,30 +15,31 @@ export class expertRespository {
 
   async getExperts(query: string) {
     if (query) {
-      return await this.find({
-        where: [
-          { name: ILike(`%${query}%`) },
-          { email: ILike(`%${query}%`) },
-          { type: ILike(`%${query}%`) },
-        ],
-      });
+      return await this.model.find({ name: { $in: [query] } });
+      // return await this.model.find({
+      //   where: [
+      //     { name:  },
+      //     { email: (`%${query}%`) },
+      //     { type: (`%${query}%`) },
+      //   ],
+      // });
     } else {
-      return await this.find();
+      return await this.model.find();
     }
   }
 
   async getById(id: string) {
-    return await this.findOne({ id });
+    return await this.model.findOne({ id });
   }
 
   async getByEmail(email: string) {
-    return await this.findOne({ email });
+    return await this.model.findOne({ email });
   }
 
   async createExpert(createExpertDTO: CreateExpertDTO, profilePicture: string) {
     const { name, phone, password, email, address, type } = createExpertDTO;
 
-    const expert = new Expert();
+    const expert = await this.model.create({});
 
     expert.name = name;
     expert.address = address;
@@ -73,11 +73,11 @@ export class expertRespository {
   }
 
   async deleteExpert(id: string) {
-    return this.delete({ id });
+    return this.model.findByIdAndDelete({ id });
   }
 
   async validate(email: string, password: string) {
-    const expertFounded = await this.findOne({ email });
+    const expertFounded = await this.model.findOne({ email });
 
     if (!expertFounded) {
       throw new NotFoundException('Especialista não encontrado');

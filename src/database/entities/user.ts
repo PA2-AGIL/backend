@@ -1,7 +1,6 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Schema()
 export class User {
   @ApiProperty()
   @Prop({ required: true })
