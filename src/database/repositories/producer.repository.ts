@@ -1,4 +1,3 @@
-import { EntityRepository, ILike, Repository } from 'typeorm';
 import { Producer, ProducerType } from '../entities/producer/producer';
 import { genSalt, hash } from 'bcrypt';
 import { CreateProducerDTO } from './dtos/createProducerDTO.interface';
