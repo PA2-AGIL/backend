@@ -19,7 +19,7 @@ import { AuthModule } from './auth/auth.module';
     MongooseModule.forRoot('mongodb://localhost/dev', {
       useFindAndModify: true,
     }),
-    // ProducerModule,
+    ProducerModule,
     ExpertModule,
     // QuestionModule,
     // AnswerModule,

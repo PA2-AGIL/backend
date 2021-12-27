@@ -1,6 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
-import { Expert } from 'src/database/entities/expert/expert';
 import { ExpertType } from 'src/database/entities/expert/expert-type.enum';
 import { UpdateExpertDTO } from 'src/database/repositories/dtos/updateExpertDTO.interface';
 import { ExpertRespository } from 'src/database/repositories/expert.repository';

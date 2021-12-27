@@ -1,28 +1,35 @@
 import { EntityRepository, ILike, Repository } from 'typeorm';
-import { Producer } from '../entities/producer/producer';
+import { Producer, ProducerType } from '../entities/producer/producer';
 import { genSalt, hash } from 'bcrypt';
 import { CreateProducerDTO } from './dtos/createProducerDTO.interface';
 import { UpdateProducerDTO } from './dtos/updateProducerDTO.interface';
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
-@EntityRepository(Producer)
-export class ProducerRepository extends Repository<Producer> {
+@Injectable()
+export class ProducerRepository {
+  constructor(
+    @InjectModel(Producer.name) private readonly model: Model<ProducerType>,
+  ) {}
+
   async getProducers(query: string) {
     if (query) {
-      return await this.find({
-        where: [{ name: ILike(`%${query}%`) }, { email: ILike(`%${query}%`) }],
-      });
+      return await this.model.find({ name: { $in: [query] } });
+      // return await this.find({
+      //   where: [{ name: ILike(`%${query}%`) }, { email: ILike(`%${query}%`) }],
+      // });
     } else {
-      return await this.find();
+      return await this.model.find();
     }
   }
 
   async getByID(id: string) {
-    return await this.findOne({ id });
+    return await this.model.findOne({ id });
   }
 
   async getByEmail(email: string) {
-    return await this.findOne({ email });
+    return await this.model.findOne({ email });
   }
 
   async createProducer(
@@ -31,7 +38,7 @@ export class ProducerRepository extends Repository<Producer> {
   ) {
     const { name, phone, password, email, address } = createProducerDTO;
 
-    const producer = new Producer();
+    const producer = await this.model.create({});
 
     producer.name = name;
     producer.address = address;
@@ -63,11 +70,11 @@ export class ProducerRepository extends Repository<Producer> {
   }
 
   async deleteProducer(id: string) {
-    return this.delete({ id });
+    return this.model.findByIdAndDelete({ id });
   }
 
   async validate(email: string, password: string) {
-    const producerFounded = await this.findOne({ email });
+    const producerFounded = await this.model.findOne({ email });
 
     if (!producerFounded) {
       throw new NotFoundException('Usuário não encontrado');
