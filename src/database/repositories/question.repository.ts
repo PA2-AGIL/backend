@@ -1,30 +1,35 @@
-import { EntityRepository, ILike, Repository } from 'typeorm';
-import { File } from '../entities/file/file';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { Producer } from '../entities/producer/producer';
-import { Question } from '../entities/question/question';
+import { Question, QuestionType } from '../entities/question/question';
 import { CreateQuestionDTO } from './dtos/createQuestionDTO.interface';
 import { UpdateQuestionDTO } from './dtos/updateQuestionDTO.interface';
 
-@EntityRepository(Question)
-export class QuestionRepository extends Repository<Question> {
+@Injectable()
+export class QuestionRepository {
+  constructor(
+    @InjectModel(Question.name)
+    private readonly model: Model<QuestionType>,
+  ) {}
+
   async getQuestions(query: string) {
     if (query) {
-      return await this.find({
-        where: [
-          { title: ILike(`%${query}%`) },
-          { content: ILike(`%${query}%`) },
-        ],
-      });
+      return await this.model.find({ name: { $in: [query] } });
+
+      // return await this.find({
+      //   where: [
+      //     { title: ILike(`%${query}%`) },
+      //     { content: ILike(`%${query}%`) },
+      //   ],
+      // });
     } else {
-      return await this.find();
+      return await this.model.find();
     }
   }
 
   async getByID(id: string) {
-    const question = await this.findOne(
-      { id },
-      { relations: ['answers', 'files'] },
-    );
+    const question = await this.model.findOne({ id });
 
     if (!question) {
       throw Error('Não foi possível encontrar essa questão');
@@ -35,16 +40,16 @@ export class QuestionRepository extends Repository<Question> {
 
   async createQuestion(
     createQuestionDTO: CreateQuestionDTO,
-    files: File[],
+    images: string[],
     producer: Producer,
   ) {
     const { title, content } = createQuestionDTO;
 
-    const question = new Question();
+    const question = await this.model.create({});
 
     question.title = title;
     question.content = content;
-    question.files = files;
+    question.images = images;
     question.producer = producer;
 
     await question.save();
@@ -66,6 +71,6 @@ export class QuestionRepository extends Repository<Question> {
   }
 
   async deleteQuestion(id: string) {
-    return this.delete({ id });
+    return this.model.findByIdAndDelete({ id });
   }
 }
