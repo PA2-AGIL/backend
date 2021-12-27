@@ -1,45 +1,26 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  ObjectIdColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Document } from 'mongoose';
 import { Question } from '../question/question';
 
-@Entity()
-export class Answer extends BaseEntity {
-  @ApiProperty()
-  @ObjectIdColumn()
-  id: string;
+export type AnswerType = Answer & Document;
 
+@Schema()
+export class Answer {
   @ApiProperty()
-  @Column()
+  @Prop({ required: true })
   content: string;
 
   @ApiProperty()
-  @Column({ nullable: false })
+  @Prop({ required: true })
   ownerId: string;
 
   @ApiProperty()
-  @Column()
+  @Prop({ required: true })
   isExpert: boolean;
 
-  @ManyToOne(() => Question, (question) => question.answers)
+  @Prop({ required: true })
   question: Question;
-
-  @ApiProperty()
-  @CreateDateColumn({
-    type: 'timestamp',
-  })
-  created_at: Date;
-
-  @ApiProperty()
-  @UpdateDateColumn({
-    type: 'timestamp',
-  })
-  updated_at: Date;
 }
+
+export const AnswerSchema = SchemaFactory.createForClass(Answer);
