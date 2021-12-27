@@ -5,8 +5,6 @@ import sharp from 'sharp';
 
 @Injectable()
 export class FileUploadService {
-  constructor(private readonly repository: any) {}
-
   async upload(dataBuffer: Buffer, filename: string) {
     const resized = await sharp(dataBuffer)
       .resize({

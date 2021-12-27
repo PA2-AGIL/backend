@@ -47,21 +47,21 @@ export class AuthService {
     return this.producerService.create(CreateProducerDTO, picture);
   }
 
-  // async signInProducer(signInDTO: SignInDTO) {
-  //   const { email, password } = signInDTO;
+  async signInProducer(signInDTO: SignInDTO) {
+    const { email, password } = signInDTO;
 
-  //   const producerSignIn = await this.producerService.validate(email, password);
+    const producerSignIn = await this.producerService.validate(email, password);
 
-  //   if (!producerSignIn) {
-  //     throw new UnauthorizedException('Credênciais Inválidas');
-  //   }
+    if (!producerSignIn) {
+      throw new UnauthorizedException('Credênciais Inválidas');
+    }
 
-  //   const payload: JwtPayload = {
-  //     id: producerSignIn.id,
-  //     email: producerSignIn.email,
-  //   };
-  //   const accessToken = this.jwtService.sign(payload);
+    const payload: JwtPayload = {
+      id: producerSignIn.id,
+      email: producerSignIn.email,
+    };
+    const accessToken = this.jwtService.sign(payload);
 
-  //   return { accessToken };
-  // }
+    return { accessToken };
+  }
 }
