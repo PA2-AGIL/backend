@@ -53,7 +53,7 @@ export class QuestionService {
     return this.repository.deleteQuestion(id);
   }
 
-  async paginate(ops: IPaginationOptions) {
-    return await paginate<Question>(this.repository, ops);
-  }
+  // async paginate(ops: IPaginationOptions) {
+  //   return await paginate<Question>(this.repository, ops);
+  // }
 }

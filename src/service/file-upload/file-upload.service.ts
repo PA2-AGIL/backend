@@ -27,10 +27,11 @@ export class FileUploadService {
       })
       .promise();
 
-    return {
-      fileName: uploadResult.Key,
-      url: uploadResult.Location,
-    };
+    return uploadResult.Location;
+    // return {
+    //   fileName: uploadResult.Key,
+    //   url: uploadResult.Location,
+    // };
   }
 
   async uploadPictureProfile(dataBuffer: Buffer, filename: string) {
