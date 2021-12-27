@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  ObjectIdColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Question } from '../question/question';
@@ -13,7 +13,7 @@ import { Question } from '../question/question';
 @Entity()
 export class Answer extends BaseEntity {
   @ApiProperty()
-  @PrimaryGeneratedColumn('uuid')
+  @ObjectIdColumn()
   id: string;
 
   @ApiProperty()

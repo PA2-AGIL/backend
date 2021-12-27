@@ -5,8 +5,8 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  ObjectIdColumn,
   OneToMany,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Answer } from '../answer/answer';
@@ -16,7 +16,7 @@ import { Producer } from '../producer/producer';
 @Entity()
 export class Question extends BaseEntity {
   @ApiProperty()
-  @PrimaryGeneratedColumn('uuid')
+  @ObjectIdColumn()
   id: string;
 
   @ApiProperty()
