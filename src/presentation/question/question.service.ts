@@ -11,9 +11,7 @@ import { Question } from 'src/database/entities/question/question';
 @Injectable()
 export class QuestionService {
   constructor(
-    @InjectRepository(QuestionRepository)
     private readonly repository: QuestionRepository,
-    @InjectRepository(ProducerRepository)
     private readonly producerRepository: ProducerRepository,
     private readonly fileUploadService: FileUploadService,
   ) {}
