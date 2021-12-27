@@ -8,10 +8,7 @@ import { CreateFileDTOImp } from './dto/createFileDTO';
 
 @Injectable()
 export class FileUploadService {
-  constructor(
-    @InjectRepository(FileRepository)
-    private readonly repository: FileRepository,
-  ) {}
+  constructor(private readonly repository: any) {}
 
   async upload(dataBuffer: Buffer, filename: string) {
     const resized = await sharp(dataBuffer)

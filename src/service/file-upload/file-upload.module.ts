@@ -5,7 +5,6 @@ import { FileUploadController } from './file-upload.controller';
 import { FileUploadService } from './file-upload.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FileRepository])],
   controllers: [FileUploadController],
   providers: [FileUploadService],
   exports: [FileUploadService],

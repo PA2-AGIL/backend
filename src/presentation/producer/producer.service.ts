@@ -10,7 +10,6 @@ import { UpdateProducerDTOImp } from './dtos/updateProducerDTO';
 @Injectable()
 export class ProducerService {
   constructor(
-    @InjectRepository(ProducerRepository)
     private repository: ProducerRepository,
     private readonly fileUploadService: FileUploadService,
   ) {}
@@ -55,7 +54,7 @@ export class ProducerService {
     return this.repository.validate(email, password);
   }
 
-  async paginate(ops: IPaginationOptions) {
-    return await paginate<Producer>(this.repository, ops);
-  }
+  // async paginate(ops: IPaginationOptions) {
+  //   return await paginate<Producer>(this.repository, ops);
+  // }
 }
