@@ -1,7 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
-import { Producer } from 'src/database/entities/producer/producer';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
 import { ProducerRepository } from '../../database/repositories/producer.repository';
 import { CreateProducerDTOImp } from './dtos/createProducerDTO';
