@@ -15,9 +15,7 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({
       envFilePath: `${process.env.NODE_ENV}.env`,
     }),
-    MongooseModule.forRoot('mongodb://localhost/dev', {
-      useFindAndModify: true,
-    }),
+    MongooseModule.forRoot('mongodb://localhost/dev', {}),
     ProducerModule,
     ExpertModule,
     QuestionModule,

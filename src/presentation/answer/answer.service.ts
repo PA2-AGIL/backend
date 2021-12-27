@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionRepository } from 'src/database/repositories/question.repository';
 import { AnswerRepository } from '../../database/repositories/answer.repository';
 import { CreateAnswerDTOImp } from './dto/createAnswerDTO';
