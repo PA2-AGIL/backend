@@ -39,16 +39,18 @@ export class ExpertRespository {
   async createExpert(createExpertDTO: CreateExpertDTO, profilePicture: string) {
     const { name, phone, password, email, address, type } = createExpertDTO;
 
-    const expert = await this.model.create({});
+    const saltGen = await genSalt();
 
-    expert.name = name;
-    expert.address = address;
-    expert.phone = phone;
-    expert.email = email;
-    expert.type = type;
-    expert.salt = await genSalt();
-    expert.password = await hash(password, expert.salt);
-    expert.profilePicture = profilePicture;
+    const expert = await this.model.create({
+      name: name,
+      address: address,
+      phone: phone,
+      email: email,
+      type: type,
+      salt: saltGen,
+      password: await hash(password, saltGen),
+      profilePicture: profilePicture,
+    });
 
     await expert.save();
 
