@@ -45,12 +45,12 @@ export class QuestionRepository {
   ) {
     const { title, content } = createQuestionDTO;
 
-    const question = await this.model.create({});
-
-    question.title = title;
-    question.content = content;
-    question.images = images;
-    question.producer = producer;
+    const question = await this.model.create({
+      title,
+      content,
+      images,
+      producer,
+    });
 
     await question.save();
 
