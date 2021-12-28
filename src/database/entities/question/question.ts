@@ -22,7 +22,7 @@ export class Question {
   @Prop({ type: Types.ObjectId, ref: 'Producer' })
   producer: Producer;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   answers: Answer[];
 
   @Prop({ required: true })

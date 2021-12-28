@@ -19,10 +19,14 @@ export class AnswerService {
     return this.repository.getByID(id);
   }
 
-  async create(createAnswerDTO: CreateAnswerDTOImp, questionId: string) {
+  async create(
+    createAnswerDTO: CreateAnswerDTOImp,
+    questionId: string,
+    ownerId: string,
+  ) {
     const question = await this.questionRepository.getByID(questionId);
 
-    return this.repository.createAnswer(createAnswerDTO, question);
+    return this.repository.createAnswer(createAnswerDTO, question, ownerId);
   }
 
   async update(id: string, updateAnswerDTO: UpdateAnswerDTOImp) {

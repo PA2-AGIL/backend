@@ -17,7 +17,9 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { GetUser } from 'src/auth/get-user.decorator';
 import { Answer } from 'src/database/entities/answer/answer';
+import { User } from 'src/database/entities/user';
 import { AnswerService } from './answer.service';
 import { CreateAnswerDTOImp } from './dto/createAnswerDTO';
 import { UpdateAnswerDTOImp } from './dto/updateAnswerDTO';
@@ -51,10 +53,11 @@ export class AnswerController {
   @Post('/:questionId')
   @UseGuards(AuthGuard())
   create(
-    @Body() createAnswerDTO: CreateAnswerDTOImp,
+    @Body() createAnswerDto: CreateAnswerDTOImp,
     @Param('questionId') questionId: string,
+    @GetUser() user: User,
   ) {
-    return this.service.create(createAnswerDTO, questionId);
+    return this.service.create(createAnswerDto, questionId, String(user._id));
   }
 
   @ApiCreatedResponse({ type: Answer })

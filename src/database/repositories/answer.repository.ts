@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Answer, AnswerType } from '../entities/answer/answer';
-import { Question } from '../entities/question/question';
+import { QuestionType } from '../entities/question/question';
 import { CreateAnswerDTO } from './dtos/createAnswerDTO.interface';
 import { UpdateAnswerDTO } from './dtos/updateAnswerDTO.interface';
 
@@ -15,11 +15,7 @@ export class AnswerRepository {
 
   async getAnswers(query: string) {
     if (query) {
-      return await this.model.find({ name: { $in: [query] } });
-
-      // return await this.find({
-      //   where: { content: Like(`%${query}%`) },
-      // });
+      return await this.model.find({ content: { $in: [query] } });
     } else {
       return await this.model.find();
     }
@@ -35,28 +31,33 @@ export class AnswerRepository {
     return answer;
   }
 
-  async createAnswer(createAnswerDTO: CreateAnswerDTO, question: Question) {
-    const { content, isExpert, ownerId } = createAnswerDTO;
+  async createAnswer(
+    createAnswerDTO: CreateAnswerDTO,
+    question: QuestionType,
+    ownerId: string,
+  ) {
+    const { content } = createAnswerDTO;
 
     const answer = await this.model.create({
       content,
       ownerId,
-      isExpert,
-      question,
+      questionId: question.id,
     });
 
     await answer.save();
+
+    question.answers.push(answer);
+
+    await question.save();
 
     return answer;
   }
 
   async updateAnswer(id: string, updateAnswerDTO: UpdateAnswerDTO) {
     const answer = await this.getByID(id);
-    const { content, ownerId, isExpert } = updateAnswerDTO;
+    const { content } = updateAnswerDTO;
 
     answer.content = content;
-    answer.ownerId = ownerId;
-    answer.isExpert = isExpert;
 
     await answer.save();
 

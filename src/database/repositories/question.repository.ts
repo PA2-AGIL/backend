@@ -59,7 +59,7 @@ export class QuestionRepository {
   }
 
   async getByID(id: string) {
-    const question = await this.model.findOne({ id });
+    const question = await this.model.findById(id);
 
     if (!question) {
       throw Error('Não foi possível encontrar essa questão');
