@@ -21,8 +21,6 @@ export class QuestionRepository {
   ): Promise<Pagination<Question[]>> {
     const { limit, page } = paginationDTO;
 
-    console.log(paginationDTO);
-
     const skippedItems = (page - 1) * limit;
 
     if (query) {
@@ -43,12 +41,6 @@ export class QuestionRepository {
         page,
         totalCount: result.length,
       };
-      // return await this.find({
-      //   where: [
-      //     { title: ILike(`%${query}%`) },
-      //     { content: ILike(`%${query}%`) },
-      //   ],
-      // });
     } else {
       const result = await this.model
         .find()
