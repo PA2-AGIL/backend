@@ -38,12 +38,12 @@ export class AnswerRepository {
   async createAnswer(createAnswerDTO: CreateAnswerDTO, question: Question) {
     const { content, isExpert, ownerId } = createAnswerDTO;
 
-    const answer = await this.model.create({});
-
-    answer.content = content;
-    answer.ownerId = ownerId;
-    answer.isExpert = isExpert;
-    answer.question = question;
+    const answer = await this.model.create({
+      content,
+      ownerId,
+      isExpert,
+      question,
+    });
 
     await answer.save();
 
