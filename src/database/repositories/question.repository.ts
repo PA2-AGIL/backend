@@ -21,6 +21,8 @@ export class QuestionRepository {
   ): Promise<Pagination<Question[]>> {
     const { limit, page } = paginationDTO;
 
+    console.log(paginationDTO);
+
     const skippedItems = (page - 1) * limit;
 
     if (query) {
@@ -28,8 +30,9 @@ export class QuestionRepository {
         .find({
           $or: [{ content: { $in: [query] } }, { title: { $in: [query] } }],
         })
-        .skip(skippedItems)
+        .populate('producer')
         .limit(limit)
+        .skip(skippedItems)
         .sort({
           title: 'asc',
         });
@@ -49,8 +52,9 @@ export class QuestionRepository {
     } else {
       const result = await this.model
         .find()
-        .skip(skippedItems)
+        .populate('producer')
         .limit(limit)
+        .skip(skippedItems)
         .sort({ title: 'asc' });
 
       return {

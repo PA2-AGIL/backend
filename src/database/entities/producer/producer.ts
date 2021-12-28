@@ -1,12 +1,15 @@
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 import { Question } from '../question/question';
 import { User } from '../user';
 
 export type ProducerType = Producer & Document;
 
-@Schema()
+@Schema({
+  _id: true,
+})
 export class Producer extends User {
+  @Prop({ required: false, type: [{ type: Types.ObjectId, ref: 'Question' }] })
   questions: Question[];
 }
 

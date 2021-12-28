@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Answer } from '../answer/answer';
 import { Producer } from '../producer/producer';
 
@@ -19,7 +19,7 @@ export class Question {
   @Prop({ required: true, default: false })
   closed: boolean;
 
-  @Prop({ required: true })
+  @Prop({ type: Types.ObjectId, ref: 'Producer' })
   producer: Producer;
 
   @Prop({ required: true })

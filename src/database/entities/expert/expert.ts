@@ -4,10 +4,12 @@ import { Document } from 'mongoose';
 import { User } from '../user';
 
 export type ExpertType = Expert & Document;
-@Schema()
+@Schema({
+  _id: true,
+})
 export class Expert extends User {
   @ApiProperty()
-  @Prop()
+  @Prop({ required: true })
   type: string;
 }
 

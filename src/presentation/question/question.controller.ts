@@ -22,6 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { Question } from 'src/database/entities/question/question';
+import { User } from 'src/database/entities/user';
 import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTO';
@@ -44,6 +45,9 @@ export class QuestionController {
     @Query('query') query: string,
     @Query() paginationDTO: PaginationDTO,
   ) {
+    paginationDTO.limit = Number(paginationDTO.limit);
+    paginationDTO.page = Number(paginationDTO.page);
+
     return this.service.getQuestions(query, paginationDTO);
   }
 
@@ -56,17 +60,16 @@ export class QuestionController {
 
   @ApiCreatedResponse({ type: Question })
   @ApiNotFoundResponse()
-  @Post('/:ownerId')
+  @Post('/')
   @UseGuards(AuthGuard())
   @UseInterceptors(FilesInterceptor('files'))
   create(
     @Body() createQuestion: CreateQuestionDTOImp,
     @UploadedFiles() files: Express.Multer.File[],
-    @Param('ownerId') ownerId: string,
-    @GetUser() user,
+    @GetUser() user: User,
   ) {
-    console.log(user);
-    return this.service.create(createQuestion, files, ownerId);
+    // console.log(user);
+    return this.service.create(createQuestion, files, String(user._id));
   }
 
   @ApiCreatedResponse({ type: Question })
