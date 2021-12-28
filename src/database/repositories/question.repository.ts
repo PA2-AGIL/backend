@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
+import { Pagination } from 'src/utils/pagination/pagination';
 import { Producer } from '../entities/producer/producer';
 import { Question, QuestionType } from '../entities/question/question';
 import { CreateQuestionDTO } from './dtos/createQuestionDTO.interface';
@@ -13,10 +15,31 @@ export class QuestionRepository {
     private readonly model: Model<QuestionType>,
   ) {}
 
-  async getQuestions(query: string) {
-    if (query) {
-      return await this.model.find({ name: { $in: [query] } });
+  async getQuestions(
+    query: string,
+    paginationDTO: PaginationDTO,
+  ): Promise<Pagination<Question[]>> {
+    const { limit, page } = paginationDTO;
 
+    const skippedItems = (page - 1) * limit;
+
+    if (query) {
+      const result = await this.model
+        .find({
+          $or: [{ content: { $in: [query] } }, { title: { $in: [query] } }],
+        })
+        .skip(skippedItems)
+        .limit(limit)
+        .sort({
+          title: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
       // return await this.find({
       //   where: [
       //     { title: ILike(`%${query}%`) },
@@ -24,7 +47,18 @@ export class QuestionRepository {
       //   ],
       // });
     } else {
-      return await this.model.find();
+      const result = await this.model
+        .find()
+        .skip(skippedItems)
+        .limit(limit)
+        .sort({ title: 'asc' });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     }
   }
 

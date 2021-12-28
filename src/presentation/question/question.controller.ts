@@ -22,6 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { Question } from 'src/database/entities/question/question';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTO';
 import { QuestionService } from './question.service';
@@ -39,8 +40,11 @@ export class QuestionController {
   // }
 
   @Get('/all')
-  getAllQuestions(@Query('query') query: string) {
-    return this.service.getQuestions(query);
+  getAllQuestions(
+    @Query('query') query: string,
+    @Query() paginationDTO: PaginationDTO,
+  ) {
+    return this.service.getQuestions(query, paginationDTO);
   }
 
   @ApiOkResponse({ type: Question })

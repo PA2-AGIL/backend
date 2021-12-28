@@ -4,6 +4,7 @@ import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTO';
 import { ProducerRepository } from 'src/database/repositories/producer.repository';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 
 @Injectable()
 export class QuestionService {
@@ -13,8 +14,8 @@ export class QuestionService {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  async getQuestions(query: string) {
-    return this.repository.getQuestions(query);
+  async getQuestions(query: string, paginationDTO: PaginationDTO) {
+    return this.repository.getQuestions(query, paginationDTO);
   }
 
   async getByID(id: string) {
