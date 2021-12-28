@@ -37,15 +37,17 @@ export class ProducerRepository {
   ) {
     const { name, phone, password, email, address } = createProducerDTO;
 
-    const producer = await this.model.create({});
+    const saltGen = await genSalt();
 
-    producer.name = name;
-    producer.address = address;
-    producer.phone = phone;
-    producer.email = email;
-    producer.salt = await genSalt();
-    producer.password = await hash(password, producer.salt);
-    producer.profilePicture = profilePicture;
+    const producer = await this.model.create({
+      name,
+      address,
+      phone,
+      email,
+      salt: saltGen,
+      password: await hash(password, saltGen),
+      profilePicture,
+    });
 
     await producer.save();
 

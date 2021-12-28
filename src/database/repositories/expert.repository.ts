@@ -42,14 +42,14 @@ export class ExpertRespository {
     const saltGen = await genSalt();
 
     const expert = await this.model.create({
-      name: name,
-      address: address,
-      phone: phone,
-      email: email,
-      type: type,
+      name,
+      address,
+      phone,
+      email,
+      type,
       salt: saltGen,
       password: await hash(password, saltGen),
-      profilePicture: profilePicture,
+      profilePicture,
     });
 
     await expert.save();
