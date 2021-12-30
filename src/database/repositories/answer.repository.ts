@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
+import { Pagination } from 'src/utils/pagination/pagination';
 import { Answer, AnswerType } from '../entities/answer/answer';
 import { QuestionType } from '../entities/question/question';
 import { CreateAnswerDTO } from './dtos/createAnswerDTO.interface';
@@ -13,11 +15,46 @@ export class AnswerRepository {
     private readonly model: Model<AnswerType>,
   ) {}
 
-  async getAnswers(query: string) {
+  async getAnswers(
+    query: string,
+    paginationDTO: PaginationDTO,
+  ): Promise<Pagination<Answer[]>> {
+    const { limit, page } = paginationDTO;
+
+    const skippedItems = (page - 1) * limit;
+
     if (query) {
-      return await this.model.find({ content: { $in: [query] } });
+      const result = await this.model
+        .find({
+          $or: [{ content: { $in: [query] } }],
+        })
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          content: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     } else {
-      return await this.model.find();
+      const result = await this.model
+        .find()
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          content: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     }
   }
 

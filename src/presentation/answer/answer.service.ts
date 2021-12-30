@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QuestionRepository } from 'src/database/repositories/question.repository';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { AnswerRepository } from '../../database/repositories/answer.repository';
 import { CreateAnswerDTOImp } from './dto/createAnswerDTO';
 import { UpdateAnswerDTOImp } from './dto/updateAnswerDTO';
@@ -11,8 +12,8 @@ export class AnswerService {
     private readonly questionRepository: QuestionRepository,
   ) {}
 
-  async getAnswers(query: string) {
-    return this.repository.getAnswers(query);
+  async getAnswers(query: string, paginationDTO: PaginationDTO) {
+    return this.repository.getAnswers(query, paginationDTO);
   }
 
   async getByID(id: string) {

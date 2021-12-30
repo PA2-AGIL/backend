@@ -20,6 +20,7 @@ import {
 import { GetUser } from 'src/auth/get-user.decorator';
 import { Answer } from 'src/database/entities/answer/answer';
 import { User } from 'src/database/entities/user';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { AnswerService } from './answer.service';
 import { CreateAnswerDTOImp } from './dto/createAnswerDTO';
 import { UpdateAnswerDTOImp } from './dto/updateAnswerDTO';
@@ -37,8 +38,14 @@ export class AnswerController {
   // }
 
   @Get('/all')
-  getAllAnswers(@Query('query') query: string) {
-    return this.service.getAnswers(query);
+  getAllAnswers(
+    @Query('query') query: string,
+    @Query() paginationDTO: PaginationDTO,
+  ) {
+    paginationDTO.limit = Number(paginationDTO.limit);
+    paginationDTO.page = Number(paginationDTO.page);
+
+    return this.service.getAnswers(query, paginationDTO);
   }
 
   @ApiOkResponse({ type: Answer })
