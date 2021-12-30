@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { ProducerRepository } from '../../database/repositories/producer.repository';
 import { CreateProducerDTOImp } from './dtos/createProducerDTO';
 import { UpdateProducerDTOImp } from './dtos/updateProducerDTO';
@@ -11,8 +12,8 @@ export class ProducerService {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  async getProducers(query: string) {
-    return this.repository.getProducers(query);
+  async getProducers(query: string, paginationDTO: PaginationDTO) {
+    return this.repository.getProducers(query, paginationDTO);
   }
 
   async getByID(id: string) {

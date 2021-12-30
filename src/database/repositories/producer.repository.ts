@@ -5,6 +5,8 @@ import { UpdateProducerDTO } from './dtos/updateProducerDTO.interface';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Pagination } from 'src/utils/pagination/pagination';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 
 @Injectable()
 export class ProducerRepository {
@@ -12,17 +14,53 @@ export class ProducerRepository {
     @InjectModel(Producer.name) private readonly model: Model<ProducerType>,
   ) {}
 
-  async getProducers(query: string) {
+  async getProducers(
+    query: string,
+    paginationDTO: PaginationDTO,
+  ): Promise<Pagination<Producer[]>> {
+    const { limit, page } = paginationDTO;
+
+    const skippedItems = (page - 1) * limit;
+
     if (query) {
-      return await this.model
-        .find({ name: { $in: [query] } })
+      const result = await this.model
+        .find({
+          $or: [{ name: { $in: [query] } }, { email: { $in: [query] } }],
+        })
         .select('-password')
-        .select('-salt');
+        .select('-salt')
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          name: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
       // return await this.find({
       //   where: [{ name: ILike(`%${query}%`) }, { email: ILike(`%${query}%`) }],
       // });
     } else {
-      return await this.model.find().select('-password').select('-salt');
+      const result = await this.model
+        .find()
+        .select('-password')
+        .select('-salt')
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          name: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     }
   }
 
