@@ -1,11 +1,9 @@
 import { Prop } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Types } from 'mongoose';
 
 export class User {
   @ApiProperty()
-  @Prop({ type: Types.ObjectId })
-  _id: Types.ObjectId;
+  _id: string;
 
   @ApiProperty()
   @Prop({ required: true })

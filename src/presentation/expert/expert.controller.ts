@@ -7,6 +7,7 @@ import {
   Put,
   Query,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -35,7 +36,7 @@ export class ExpertController {
   @Get('/all')
   getAllExperts(
     @Query('query') query: string,
-    @Query() paginationDTO: PaginationDTO,
+    @Query(ValidationPipe) paginationDTO: PaginationDTO,
   ) {
     paginationDTO.limit = Number(paginationDTO.limit);
     paginationDTO.page = Number(paginationDTO.page);
