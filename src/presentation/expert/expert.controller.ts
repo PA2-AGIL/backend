@@ -16,6 +16,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Expert } from 'src/database/entities/expert/expert';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { UpdateExpertDTOImp } from './dtos/updateExpertDTO';
 import { ExpertService } from './expert.service';
 
@@ -32,8 +33,14 @@ export class ExpertController {
   // }
 
   @Get('/all')
-  getAllExperts(@Query('query') query: string) {
-    return this.service.getExperts(query);
+  getAllExperts(
+    @Query('query') query: string,
+    @Query() paginationDTO: PaginationDTO,
+  ) {
+    paginationDTO.limit = Number(paginationDTO.limit);
+    paginationDTO.page = Number(paginationDTO.page);
+
+    return this.service.getExperts(query, paginationDTO);
   }
 
   @ApiOkResponse({ type: Expert })

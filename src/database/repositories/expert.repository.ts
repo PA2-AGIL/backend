@@ -5,6 +5,8 @@ import { UpdateExpertDTO } from './dtos/updateExpertDTO.interface';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Pagination } from 'src/utils/pagination/pagination';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 
 @Injectable()
 export class ExpertRespository {
@@ -13,9 +15,30 @@ export class ExpertRespository {
     private readonly model: Model<ExpertType>,
   ) {}
 
-  async getExperts(query: string) {
+  async getExperts(
+    query: string,
+    paginationDTO: PaginationDTO,
+  ): Promise<Pagination<Expert[]>> {
+    const { limit, page } = paginationDTO;
+
+    const skippedItems = (page - 1) * limit;
+
     if (query) {
-      return await this.model.find({ name: { $in: [query] } });
+      const result = await this.model
+        .find({
+          $or: [
+            { name: { $in: [query] } },
+            { email: { $in: [query] } },
+            { type: { $in: [query] } },
+          ],
+        })
+        .select('-password')
+        .select('-salt')
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          name: 'asc',
+        });
       // return await this.model.find({
       //   where: [
       //     { name:  },
@@ -23,8 +46,30 @@ export class ExpertRespository {
       //     { type: (`%${query}%`) },
       //   ],
       // });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     } else {
-      return await this.model.find();
+      const result = await this.model
+        .find()
+        .select('-password')
+        .select('-salt')
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          name: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     }
   }
 

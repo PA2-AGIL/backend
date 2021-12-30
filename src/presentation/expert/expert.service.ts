@@ -3,6 +3,7 @@ import { ExpertType } from 'src/database/entities/expert/expert-type.enum';
 import { UpdateExpertDTO } from 'src/database/repositories/dtos/updateExpertDTO.interface';
 import { ExpertRespository } from 'src/database/repositories/expert.repository';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { CreateExpertDTOImp } from './dtos/createExpertDTO';
 
 @Injectable()
@@ -12,8 +13,8 @@ export class ExpertService {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  async getExperts(query: string) {
-    return this.repository.getExperts(query);
+  async getExperts(query: string, paginationDTO: PaginationDTO) {
+    return this.repository.getExperts(query, paginationDTO);
   }
 
   async getByID(id: string) {
