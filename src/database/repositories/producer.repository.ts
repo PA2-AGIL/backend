@@ -14,12 +14,15 @@ export class ProducerRepository {
 
   async getProducers(query: string) {
     if (query) {
-      return await this.model.find({ name: { $in: [query] } });
+      return await this.model
+        .find({ name: { $in: [query] } })
+        .select('-password')
+        .select('-salt');
       // return await this.find({
       //   where: [{ name: ILike(`%${query}%`) }, { email: ILike(`%${query}%`) }],
       // });
     } else {
-      return await this.model.find();
+      return await this.model.find().select('-password').select('-salt');
     }
   }
 

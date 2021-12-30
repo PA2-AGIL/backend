@@ -28,7 +28,7 @@ export class QuestionRepository {
         .find({
           $or: [{ content: { $in: [query] } }, { title: { $in: [query] } }],
         })
-        .populate('producer')
+        .populate('producer', 'name')
         .limit(limit)
         .skip(skippedItems)
         .sort({
@@ -44,7 +44,7 @@ export class QuestionRepository {
     } else {
       const result = await this.model
         .find()
-        .populate('producer')
+        .populate('producer', 'name')
         .limit(limit)
         .skip(skippedItems)
         .sort({ title: 'asc' });
