@@ -17,7 +17,10 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { GetUser } from 'src/auth/get-user.decorator';
 import { Answer } from 'src/database/entities/answer/answer';
+import { User } from 'src/database/entities/user';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { AnswerService } from './answer.service';
 import { CreateAnswerDTOImp } from './dto/createAnswerDTO';
 import { UpdateAnswerDTOImp } from './dto/updateAnswerDTO';
@@ -27,16 +30,15 @@ import { UpdateAnswerDTOImp } from './dto/updateAnswerDTO';
 export class AnswerController {
   constructor(private readonly service: AnswerService) {}
 
-  @ApiOkResponse({ type: Answer, isArray: true })
-  @Get()
-  getAnswers(@Query('page') page = 1, @Query('limit') limit = 10) {
-    limit = limit > 100 ? 100 : limit;
-    return this.service.paginate({ page, limit });
-  }
-
   @Get('/all')
-  getAllAnswers(@Query('query') query: string) {
-    return this.service.getAnswers(query);
+  getAllAnswers(
+    @Query('query') query: string,
+    @Query() paginationDTO: PaginationDTO,
+  ) {
+    paginationDTO.limit = Number(paginationDTO.limit);
+    paginationDTO.page = Number(paginationDTO.page);
+
+    return this.service.getAnswers(query, paginationDTO);
   }
 
   @ApiOkResponse({ type: Answer })
@@ -51,10 +53,11 @@ export class AnswerController {
   @Post('/:questionId')
   @UseGuards(AuthGuard())
   create(
-    @Body() createAnswerDTO: CreateAnswerDTOImp,
+    @Body() createAnswerDto: CreateAnswerDTOImp,
     @Param('questionId') questionId: string,
+    @GetUser() user: User,
   ) {
-    return this.service.create(createAnswerDTO, questionId);
+    return this.service.create(createAnswerDto, questionId, String(user._id));
   }
 
   @ApiCreatedResponse({ type: Answer })

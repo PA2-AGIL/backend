@@ -16,6 +16,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Producer } from 'src/database/entities/producer/producer';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { UpdateProducerDTOImp } from './dtos/updateProducerDTO';
 import { ProducerService } from './producer.service';
 
@@ -24,19 +25,15 @@ import { ProducerService } from './producer.service';
 export class ProducerController {
   constructor(private readonly service: ProducerService) {}
 
-  @ApiOkResponse({ type: Producer, isArray: true })
-  @Get()
-  getProducers(@Query('page') page = 1, @Query('limit') limit = 10) {
-    limit = limit > 100 ? 100 : limit;
-    return this.service.paginate({
-      page,
-      limit,
-    });
-  }
-
   @Get('/all')
-  getAllProducers(@Query('query') query: string) {
-    return this.service.getProducers(query);
+  getAllProducers(
+    @Query('query') query: string,
+    @Query() paginationDTO: PaginationDTO,
+  ) {
+    paginationDTO.limit = Number(paginationDTO.limit);
+    paginationDTO.page = Number(paginationDTO.page);
+
+    return this.service.getProducers(query, paginationDTO);
   }
 
   @ApiOkResponse({ type: Producer })

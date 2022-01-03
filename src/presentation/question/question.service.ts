@@ -1,25 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionRepository } from 'src/database/repositories/question.repository';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTO';
 import { ProducerRepository } from 'src/database/repositories/producer.repository';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
-import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
-import { Question } from 'src/database/entities/question/question';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 
 @Injectable()
 export class QuestionService {
   constructor(
-    @InjectRepository(QuestionRepository)
     private readonly repository: QuestionRepository,
-    @InjectRepository(ProducerRepository)
     private readonly producerRepository: ProducerRepository,
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  async getQuestions(query: string) {
-    return this.repository.getQuestions(query);
+  async getQuestions(query: string, paginationDTO: PaginationDTO) {
+    return this.repository.getQuestions(query, paginationDTO);
   }
 
   async getByID(id: string) {
@@ -53,9 +49,5 @@ export class QuestionService {
 
   async delete(id: string) {
     return this.repository.deleteQuestion(id);
-  }
-
-  async paginate(ops: IPaginationOptions) {
-    return await paginate<Question>(this.repository, ops);
   }
 }

@@ -1,10 +1,16 @@
-import { Entity, OneToMany, Unique } from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 import { Question } from '../question/question';
 import { User } from '../user';
 
-@Entity()
-@Unique(['email'])
+export type ProducerType = Producer & Document;
+
+@Schema({
+  _id: true,
+})
 export class Producer extends User {
-  @OneToMany(() => Question, (question) => question.producer)
+  @Prop({ required: false, type: [{ type: Types.ObjectId, ref: 'Question' }] })
   questions: Question[];
 }
+
+export const ProducerSchema = SchemaFactory.createForClass(Producer);

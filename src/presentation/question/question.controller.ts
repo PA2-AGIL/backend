@@ -22,6 +22,8 @@ import {
 } from '@nestjs/swagger';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { Question } from 'src/database/entities/question/question';
+import { User } from 'src/database/entities/user';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTO';
 import { QuestionService } from './question.service';
@@ -31,16 +33,15 @@ import { QuestionService } from './question.service';
 export class QuestionController {
   constructor(private readonly service: QuestionService) {}
 
-  @ApiOkResponse({ type: Question, isArray: true })
-  @Get()
-  getQuestions(@Query('page') page = 1, @Query('limit') limit = 10) {
-    limit = limit > 100 ? 100 : limit;
-    return this.service.paginate({ page, limit });
-  }
-
   @Get('/all')
-  getAllQuestions(@Query('query') query: string) {
-    return this.service.getQuestions(query);
+  getAllQuestions(
+    @Query('query') query: string,
+    @Query() paginationDTO: PaginationDTO,
+  ) {
+    paginationDTO.limit = Number(paginationDTO.limit);
+    paginationDTO.page = Number(paginationDTO.page);
+
+    return this.service.getQuestions(query, paginationDTO);
   }
 
   @ApiOkResponse({ type: Question })
@@ -52,17 +53,16 @@ export class QuestionController {
 
   @ApiCreatedResponse({ type: Question })
   @ApiNotFoundResponse()
-  @Post('/:ownerId')
+  @Post('/')
   @UseGuards(AuthGuard())
   @UseInterceptors(FilesInterceptor('files'))
   create(
     @Body() createQuestion: CreateQuestionDTOImp,
     @UploadedFiles() files: Express.Multer.File[],
-    @Param('ownerId') ownerId: string,
-    @GetUser() user,
+    @GetUser() user: User,
   ) {
-    console.log(user);
-    return this.service.create(createQuestion, files, ownerId);
+    // console.log(user);
+    return this.service.create(createQuestion, files, String(user._id));
   }
 
   @ApiCreatedResponse({ type: Question })

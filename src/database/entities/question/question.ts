@@ -1,54 +1,32 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Document, Types } from 'mongoose';
 import { Answer } from '../answer/answer';
-import { File } from '../file/file';
 import { Producer } from '../producer/producer';
 
-@Entity()
-export class Question extends BaseEntity {
+export type QuestionType = Question & Document;
+@Schema()
+export class Question {
   @ApiProperty()
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @ApiProperty()
-  @Column()
+  @Prop({ required: true })
   title: string;
 
   @ApiProperty()
-  @Column()
+  @Prop({ required: true })
   content: string;
 
   @ApiProperty()
-  @Column({ default: false, nullable: false })
+  @Prop({ required: true, default: false })
   closed: boolean;
 
-  @ManyToOne(() => Producer, (producer) => producer.questions)
+  @Prop({ type: Types.ObjectId, ref: 'Producer' })
   producer: Producer;
 
-  @OneToMany(() => Answer, (answer) => answer.question)
+  @Prop({ required: false })
   answers: Answer[];
 
-  @OneToMany(() => File, (file) => file.question, { lazy: true })
-  files: File[];
-
-  @ApiProperty()
-  @CreateDateColumn({
-    type: 'timestamp',
-  })
-  created_at: Date;
-
-  @ApiProperty()
-  @UpdateDateColumn({
-    type: 'timestamp',
-  })
-  updated_at: Date;
+  @Prop({ required: true })
+  images: string[];
 }
+
+export const QuestionSchema = SchemaFactory.createForClass(Question);

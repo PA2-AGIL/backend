@@ -1,23 +1,65 @@
-import { EntityRepository, Like, Repository } from 'typeorm';
-import { Answer } from '../entities/answer/answer';
-import { Question } from '../entities/question/question';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
+import { Pagination } from 'src/utils/pagination/pagination';
+import { Answer, AnswerType } from '../entities/answer/answer';
+import { QuestionType } from '../entities/question/question';
 import { CreateAnswerDTO } from './dtos/createAnswerDTO.interface';
 import { UpdateAnswerDTO } from './dtos/updateAnswerDTO.interface';
 
-@EntityRepository(Answer)
-export class AnswerRepository extends Repository<Answer> {
-  async getAnswers(query: string) {
+@Injectable()
+export class AnswerRepository {
+  constructor(
+    @InjectModel(Answer.name)
+    private readonly model: Model<AnswerType>,
+  ) {}
+
+  async getAnswers(
+    query: string,
+    paginationDTO: PaginationDTO,
+  ): Promise<Pagination<Answer[]>> {
+    const { limit, page } = paginationDTO;
+
+    const skippedItems = (page - 1) * limit;
+
     if (query) {
-      return await this.find({
-        where: { content: Like(`%${query}%`) },
-      });
+      const result = await this.model
+        .find({
+          $or: [{ content: { $in: [query] } }],
+        })
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          content: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     } else {
-      return await this.find();
+      const result = await this.model
+        .find()
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          content: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     }
   }
 
   async getByID(id: string) {
-    const answer = await this.findOne({ id });
+    const answer = await this.model.findOne({ id });
 
     if (!answer) {
       throw Error('Não foi possível encontrar essa resposta');
@@ -26,28 +68,33 @@ export class AnswerRepository extends Repository<Answer> {
     return answer;
   }
 
-  async createAnswer(createAnswerDTO: CreateAnswerDTO, question: Question) {
-    const { content, isExpert, ownerId } = createAnswerDTO;
+  async createAnswer(
+    createAnswerDTO: CreateAnswerDTO,
+    question: QuestionType,
+    ownerId: string,
+  ) {
+    const { content } = createAnswerDTO;
 
-    const answer = new Answer();
-
-    answer.content = content;
-    answer.ownerId = ownerId;
-    answer.isExpert = isExpert;
-    answer.question = question;
+    const answer = await this.model.create({
+      content,
+      ownerId,
+      questionId: question.id,
+    });
 
     await answer.save();
+
+    question.answers.push(answer);
+
+    await question.save();
 
     return answer;
   }
 
   async updateAnswer(id: string, updateAnswerDTO: UpdateAnswerDTO) {
     const answer = await this.getByID(id);
-    const { content, ownerId, isExpert } = updateAnswerDTO;
+    const { content } = updateAnswerDTO;
 
     answer.content = content;
-    answer.ownerId = ownerId;
-    answer.isExpert = isExpert;
 
     await answer.save();
 
@@ -55,6 +102,6 @@ export class AnswerRepository extends Repository<Answer> {
   }
 
   async deleteAnswer(id: string) {
-    return this.delete({ id });
+    return this.model.findByIdAndDelete({ id });
   }
 }

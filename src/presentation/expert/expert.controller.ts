@@ -7,6 +7,7 @@ import {
   Put,
   Query,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -16,6 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Expert } from 'src/database/entities/expert/expert';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { UpdateExpertDTOImp } from './dtos/updateExpertDTO';
 import { ExpertService } from './expert.service';
 
@@ -24,16 +26,15 @@ import { ExpertService } from './expert.service';
 export class ExpertController {
   constructor(private readonly service: ExpertService) {}
 
-  @ApiOkResponse({ type: Expert, isArray: true })
-  @Get()
-  getExperts(@Query('page') page = 1, @Query('limit') limit = 10) {
-    limit = limit > 100 ? 100 : limit;
-    return this.service.paginate({ page, limit });
-  }
-
   @Get('/all')
-  getAllExperts(@Query('query') query: string) {
-    return this.service.getExperts(query);
+  getAllExperts(
+    @Query('query') query: string,
+    @Query(ValidationPipe) paginationDTO: PaginationDTO,
+  ) {
+    paginationDTO.limit = Number(paginationDTO.limit);
+    paginationDTO.page = Number(paginationDTO.page);
+
+    return this.service.getExperts(query, paginationDTO);
   }
 
   @ApiOkResponse({ type: Expert })

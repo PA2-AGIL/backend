@@ -1,23 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
-import { Expert } from 'src/database/entities/expert/expert';
 import { ExpertType } from 'src/database/entities/expert/expert-type.enum';
 import { UpdateExpertDTO } from 'src/database/repositories/dtos/updateExpertDTO.interface';
-import { expertRespository } from 'src/database/repositories/expert.repository';
+import { ExpertRespository } from 'src/database/repositories/expert.repository';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { CreateExpertDTOImp } from './dtos/createExpertDTO';
 
 @Injectable()
 export class ExpertService {
   constructor(
-    @InjectRepository(expertRespository)
-    private repository: expertRespository,
+    private repository: ExpertRespository,
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  async getExperts(query: string) {
-    return this.repository.getExperts(query);
+  async getExperts(query: string, paginationDTO: PaginationDTO) {
+    return this.repository.getExperts(query, paginationDTO);
   }
 
   async getByID(id: string) {
@@ -64,9 +61,5 @@ export class ExpertService {
 
   async validate(email: string, password: string) {
     return this.repository.validate(email, password);
-  }
-
-  async paginate(ops: IPaginationOptions) {
-    return await paginate<Expert>(this.repository, ops);
   }
 }

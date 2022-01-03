@@ -1,28 +1,72 @@
-import { EntityRepository, ILike, Repository } from 'typeorm';
-import { Producer } from '../entities/producer/producer';
+import { Producer, ProducerType } from '../entities/producer/producer';
 import { genSalt, hash } from 'bcrypt';
 import { CreateProducerDTO } from './dtos/createProducerDTO.interface';
 import { UpdateProducerDTO } from './dtos/updateProducerDTO.interface';
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Pagination } from 'src/utils/pagination/pagination';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 
-@EntityRepository(Producer)
-export class ProducerRepository extends Repository<Producer> {
-  async getProducers(query: string) {
+@Injectable()
+export class ProducerRepository {
+  constructor(
+    @InjectModel(Producer.name) private readonly model: Model<ProducerType>,
+  ) {}
+
+  async getProducers(
+    query: string,
+    paginationDTO: PaginationDTO,
+  ): Promise<Pagination<Producer[]>> {
+    const { limit, page } = paginationDTO;
+
+    const skippedItems = (page - 1) * limit;
+
     if (query) {
-      return await this.find({
-        where: [{ name: ILike(`%${query}%`) }, { email: ILike(`%${query}%`) }],
-      });
+      const result = await this.model
+        .find({
+          $or: [{ name: { $in: [query] } }, { email: { $in: [query] } }],
+        })
+        .select('-password')
+        .select('-salt')
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          name: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     } else {
-      return await this.find();
+      const result = await this.model
+        .find()
+        .select('-password')
+        .select('-salt')
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          name: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     }
   }
 
   async getByID(id: string) {
-    return await this.findOne({ id });
+    return await this.model.findOne({ id });
   }
 
   async getByEmail(email: string) {
-    return await this.findOne({ email });
+    return await this.model.findOne({ email });
   }
 
   async createProducer(
@@ -31,15 +75,17 @@ export class ProducerRepository extends Repository<Producer> {
   ) {
     const { name, phone, password, email, address } = createProducerDTO;
 
-    const producer = new Producer();
+    const saltGen = await genSalt();
 
-    producer.name = name;
-    producer.address = address;
-    producer.phone = phone;
-    producer.email = email;
-    producer.salt = await genSalt();
-    producer.password = await hash(password, producer.salt);
-    producer.profilePicture = profilePicture;
+    const producer = await this.model.create({
+      name,
+      address,
+      phone,
+      email,
+      salt: saltGen,
+      password: await hash(password, saltGen),
+      profilePicture,
+    });
 
     await producer.save();
 
@@ -63,11 +109,11 @@ export class ProducerRepository extends Repository<Producer> {
   }
 
   async deleteProducer(id: string) {
-    return this.delete({ id });
+    return this.model.findByIdAndDelete({ id });
   }
 
   async validate(email: string, password: string) {
-    const producerFounded = await this.findOne({ email });
+    const producerFounded = await this.model.findOne({ email });
 
     if (!producerFounded) {
       throw new NotFoundException('Usuário não encontrado');

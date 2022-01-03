@@ -1,53 +1,34 @@
+import { Prop } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
 
-export class User extends BaseEntity {
+export class User {
   @ApiProperty()
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  _id: string;
 
   @ApiProperty()
-  @Column()
+  @Prop({ required: true })
   name: string;
 
   @ApiProperty()
-  @Column()
+  @Prop({ required: true })
   email: string;
 
   @ApiProperty()
-  @Column()
+  @Prop({ required: true })
   password: string;
 
   @ApiProperty()
-  @Column()
+  @Prop({ required: true })
   phone: string;
 
   @ApiProperty()
-  @Column()
+  @Prop({ required: true })
   address: string;
 
   @ApiProperty()
-  @Column()
+  @Prop({ required: false })
   profilePicture: string;
 
-  @Column()
+  @Prop({ required: true })
   salt: string;
-
-  @ApiProperty()
-  @CreateDateColumn({
-    type: 'timestamp',
-  })
-  created_at: Date;
-
-  @ApiProperty()
-  @UpdateDateColumn({
-    type: 'timestamp',
-  })
-  updated_at: Date;
 }

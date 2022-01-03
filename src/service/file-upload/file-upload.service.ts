@@ -2,17 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { S3 } from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
 import sharp from 'sharp';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FileRepository } from 'src/database/repositories/file.repository';
-import { CreateFileDTOImp } from './dto/createFileDTO';
 
 @Injectable()
 export class FileUploadService {
-  constructor(
-    @InjectRepository(FileRepository)
-    private readonly repository: FileRepository,
-  ) {}
-
   async upload(dataBuffer: Buffer, filename: string) {
     const resized = await sharp(dataBuffer)
       .resize({
@@ -33,10 +25,7 @@ export class FileUploadService {
       })
       .promise();
 
-    return await this.create({
-      fileName: uploadResult.Key,
-      url: uploadResult.Location,
-    });
+    return uploadResult.Location;
   }
 
   async uploadPictureProfile(dataBuffer: Buffer, filename: string) {
@@ -60,9 +49,5 @@ export class FileUploadService {
       .promise();
 
     return { url: uploadResult.Location };
-  }
-
-  private async create(createFileDTO: CreateFileDTOImp) {
-    return this.repository.createFile(createFileDTO);
   }
 }

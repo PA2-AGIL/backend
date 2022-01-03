@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProducerModule } from './presentation/producer/producer.module';
@@ -15,7 +15,7 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({
       envFilePath: `${process.env.NODE_ENV}.env`,
     }),
-    TypeOrmModule.forRoot(),
+    MongooseModule.forRoot('mongodb://localhost/dev', {}),
     ProducerModule,
     ExpertModule,
     QuestionModule,

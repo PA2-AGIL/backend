@@ -1,10 +1,16 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, Unique } from 'typeorm';
+import { Document } from 'mongoose';
 import { User } from '../user';
-@Entity()
-@Unique(['email'])
+
+export type ExpertType = Expert & Document;
+@Schema({
+  _id: true,
+})
 export class Expert extends User {
   @ApiProperty()
-  @Column()
+  @Prop({ required: true })
   type: string;
 }
+
+export const ExpertSchema = SchemaFactory.createForClass(Expert);

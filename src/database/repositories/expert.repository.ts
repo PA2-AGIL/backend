@@ -1,47 +1,94 @@
-import { EntityRepository, ILike, Repository } from 'typeorm';
 import { genSalt, hash } from 'bcrypt';
-import { Expert } from '../entities/expert/expert';
+import { Expert, ExpertType } from '../entities/expert/expert';
 import { CreateExpertDTO } from './dtos/createExpertDTO.interface';
 import { UpdateExpertDTO } from './dtos/updateExpertDTO.interface';
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Pagination } from 'src/utils/pagination/pagination';
+import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 
-@EntityRepository(Expert)
-export class expertRespository extends Repository<Expert> {
-  async getExperts(query: string) {
+@Injectable()
+export class ExpertRespository {
+  constructor(
+    @InjectModel(Expert.name)
+    private readonly model: Model<ExpertType>,
+  ) {}
+
+  async getExperts(
+    query: string,
+    paginationDTO: PaginationDTO,
+  ): Promise<Pagination<Expert[]>> {
+    const { limit, page } = paginationDTO;
+
+    const skippedItems = (page - 1) * limit;
+
     if (query) {
-      return await this.find({
-        where: [
-          { name: ILike(`%${query}%`) },
-          { email: ILike(`%${query}%`) },
-          { type: ILike(`%${query}%`) },
-        ],
-      });
+      const result = await this.model
+        .find({
+          $or: [
+            { name: { $in: [query] } },
+            { email: { $in: [query] } },
+            { type: { $in: [query] } },
+          ],
+        })
+        .select('-password')
+        .select('-salt')
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          name: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     } else {
-      return await this.find();
+      const result = await this.model
+        .find()
+        .select('-password')
+        .select('-salt')
+        .limit(limit)
+        .skip(skippedItems)
+        .sort({
+          name: 'asc',
+        });
+
+      return {
+        data: result,
+        limit,
+        page,
+        totalCount: result.length,
+      };
     }
   }
 
   async getById(id: string) {
-    return await this.findOne({ id });
+    return await this.model.findOne({ id });
   }
 
   async getByEmail(email: string) {
-    return await this.findOne({ email });
+    return await this.model.findOne({ email });
   }
 
   async createExpert(createExpertDTO: CreateExpertDTO, profilePicture: string) {
     const { name, phone, password, email, address, type } = createExpertDTO;
 
-    const expert = new Expert();
+    const saltGen = await genSalt();
 
-    expert.name = name;
-    expert.address = address;
-    expert.phone = phone;
-    expert.email = email;
-    expert.type = type;
-    expert.salt = await genSalt();
-    expert.password = await hash(password, expert.salt);
-    expert.profilePicture = profilePicture;
+    const expert = await this.model.create({
+      name,
+      address,
+      phone,
+      email,
+      type,
+      salt: saltGen,
+      password: await hash(password, saltGen),
+      profilePicture,
+    });
 
     await expert.save();
 
@@ -66,11 +113,11 @@ export class expertRespository extends Repository<Expert> {
   }
 
   async deleteExpert(id: string) {
-    return this.delete({ id });
+    return this.model.findByIdAndDelete({ id });
   }
 
   async validate(email: string, password: string) {
-    const expertFounded = await this.findOne({ email });
+    const expertFounded = await this.model.findOne({ email });
 
     if (!expertFounded) {
       throw new NotFoundException('Especialista não encontrado');
