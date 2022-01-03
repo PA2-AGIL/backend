@@ -5,7 +5,10 @@ import { Answer } from '../answer/answer';
 import { Producer } from '../producer/producer';
 
 export type QuestionType = Question & Document;
-@Schema()
+@Schema({
+  _id: true,
+  timestamps: { createdAt: true, updatedAt: true },
+})
 export class Question {
   @ApiProperty()
   @Prop({ required: true })
