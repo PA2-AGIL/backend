@@ -6,6 +6,7 @@ import { User } from '../user';
 export type ExpertType = Expert & Document;
 @Schema({
   _id: true,
+  timestamps: { createdAt: true, updatedAt: true },
 })
 export class Expert extends User {
   @ApiProperty()
