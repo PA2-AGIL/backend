@@ -28,16 +28,18 @@ export class ProducerService {
     createProducerDTO: CreateProducerDTOImp,
     profilePicture: Express.Multer.File,
   ) {
-    if (!profilePicture) {
-      throw new BadRequestException('Imagem é obrigatório');
+    let stringToPicture = null;
+
+    if (profilePicture) {
+      const { url } = await this.fileUploadService.uploadPictureProfile(
+        profilePicture.buffer,
+        profilePicture.originalname,
+      );
+
+      stringToPicture = url;
     }
 
-    const { url } = await this.fileUploadService.uploadPictureProfile(
-      profilePicture.buffer,
-      profilePicture.originalname,
-    );
-
-    return this.repository.createProducer(createProducerDTO, url);
+    return this.repository.createProducer(createProducerDTO, stringToPicture);
   }
 
   async update(id: string, updateProducerDTO: UpdateProducerDTOImp) {
