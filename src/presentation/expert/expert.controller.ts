@@ -26,13 +26,6 @@ import { ExpertService } from './expert.service';
 export class ExpertController {
   constructor(private readonly service: ExpertService) {}
 
-  // @ApiOkResponse({ type: Expert, isArray: true })
-  // @Get()
-  // getExperts(@Query('page') page = 1, @Query('limit') limit = 10) {
-  //   limit = limit > 100 ? 100 : limit;
-  //   return this.service.paginate({ page, limit });
-  // }
-
   @Get('/all')
   getAllExperts(
     @Query('query') query: string,

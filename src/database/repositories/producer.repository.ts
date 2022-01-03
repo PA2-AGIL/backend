@@ -41,9 +41,6 @@ export class ProducerRepository {
         page,
         totalCount: result.length,
       };
-      // return await this.find({
-      //   where: [{ name: ILike(`%${query}%`) }, { email: ILike(`%${query}%`) }],
-      // });
     } else {
       const result = await this.model
         .find()

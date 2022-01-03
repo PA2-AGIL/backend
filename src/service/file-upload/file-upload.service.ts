@@ -26,10 +26,6 @@ export class FileUploadService {
       .promise();
 
     return uploadResult.Location;
-    // return {
-    //   fileName: uploadResult.Key,
-    //   url: uploadResult.Location,
-    // };
   }
 
   async uploadPictureProfile(dataBuffer: Buffer, filename: string) {

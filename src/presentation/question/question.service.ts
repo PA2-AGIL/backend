@@ -50,8 +50,4 @@ export class QuestionService {
   async delete(id: string) {
     return this.repository.deleteQuestion(id);
   }
-
-  // async paginate(ops: IPaginationOptions) {
-  //   return await paginate<Question>(this.repository, ops);
-  // }
 }

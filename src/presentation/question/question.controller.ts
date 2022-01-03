@@ -33,13 +33,6 @@ import { QuestionService } from './question.service';
 export class QuestionController {
   constructor(private readonly service: QuestionService) {}
 
-  // @ApiOkResponse({ type: Question, isArray: true })
-  // @Get()
-  // getQuestions(@Query('page') page = 1, @Query('limit') limit = 10) {
-  //   limit = limit > 100 ? 100 : limit;
-  //   return this.service.paginate({ page, limit });
-  // }
-
   @Get('/all')
   getAllQuestions(
     @Query('query') query: string,

@@ -51,8 +51,4 @@ export class ProducerService {
   async validate(email: string, password: string) {
     return this.repository.validate(email, password);
   }
-
-  // async paginate(ops: IPaginationOptions) {
-  //   return await paginate<Producer>(this.repository, ops);
-  // }
 }

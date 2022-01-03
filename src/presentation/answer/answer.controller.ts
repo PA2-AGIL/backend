@@ -30,13 +30,6 @@ import { UpdateAnswerDTOImp } from './dto/updateAnswerDTO';
 export class AnswerController {
   constructor(private readonly service: AnswerService) {}
 
-  // @ApiOkResponse({ type: Answer, isArray: true })
-  // @Get()
-  // getAnswers(@Query('page') page = 1, @Query('limit') limit = 10) {
-  //   limit = limit > 100 ? 100 : limit;
-  //   return this.service.paginate({ page, limit });
-  // }
-
   @Get('/all')
   getAllAnswers(
     @Query('query') query: string,

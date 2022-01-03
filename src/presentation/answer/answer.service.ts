@@ -37,8 +37,4 @@ export class AnswerService {
   async delete(id: string) {
     return this.repository.deleteAnswer(id);
   }
-
-  // async paginate(ops: IPaginationOptions) {
-  //   return await paginate<Answer>(this.repository, ops);
-  // }
 }

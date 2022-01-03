@@ -39,13 +39,6 @@ export class ExpertRespository {
         .sort({
           name: 'asc',
         });
-      // return await this.model.find({
-      //   where: [
-      //     { name:  },
-      //     { email: (`%${query}%`) },
-      //     { type: (`%${query}%`) },
-      //   ],
-      // });
 
       return {
         data: result,
