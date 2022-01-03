@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
 import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { ProducerRepository } from '../../database/repositories/producer.repository';
