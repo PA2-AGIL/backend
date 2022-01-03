@@ -4,7 +4,10 @@ import { Document, Types } from 'mongoose';
 
 export type AnswerType = Answer & Document;
 
-@Schema()
+@Schema({
+  _id: true,
+  timestamps: { createdAt: true, updatedAt: true },
+})
 export class Answer {
   @ApiProperty()
   @Prop({ required: true })
