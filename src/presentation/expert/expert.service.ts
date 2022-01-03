@@ -29,10 +29,6 @@ export class ExpertService {
     createExpertDTO: CreateExpertDTOImp,
     profilePicture: Express.Multer.File,
   ) {
-    if (!profilePicture) {
-      throw new BadRequestException('Imagem é obrigatório');
-    }
-
     const { type } = createExpertDTO;
 
     const isValidType = Object.values(ExpertType).find(
@@ -43,12 +39,18 @@ export class ExpertService {
       throw new BadRequestException('Tipo do Especialista é inválido');
     }
 
-    const { url } = await this.fileUploadService.uploadPictureProfile(
-      profilePicture.buffer,
-      profilePicture.originalname,
-    );
+    let stringToPicture = null;
 
-    return this.repository.createExpert(createExpertDTO, url);
+    if (profilePicture) {
+      const { url } = await this.fileUploadService.uploadPictureProfile(
+        profilePicture.buffer,
+        profilePicture.originalname,
+      );
+
+      stringToPicture = url;
+    }
+
+    return this.repository.createExpert(createExpertDTO, stringToPicture);
   }
 
   async update(id: string, updateExpertDTO: UpdateExpertDTO) {
