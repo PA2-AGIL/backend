@@ -62,7 +62,10 @@ export class ProducerRepository {
   }
 
   async getByID(id: string) {
-    return await this.model.findOne({ id });
+    return await this.model
+      .findById(id)
+      .populate('questionsLiked')
+      .populate('questionsDisliked');
   }
 
   async getByEmail(email: string) {

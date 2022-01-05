@@ -1,5 +1,7 @@
 import { Prop } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import { Types } from 'mongoose';
+import { Question } from './question/question';
 
 export class User {
   @ApiProperty()
@@ -31,4 +33,10 @@ export class User {
 
   @Prop({ required: true })
   salt: string;
+
+  @Prop({ required: false, type: [{ type: Types.ObjectId, ref: 'Question' }] })
+  questionsLiked: Question[];
+
+  @Prop({ required: false, type: [{ type: Types.ObjectId, ref: 'Question' }] })
+  questionsDisliked: Question[];
 }

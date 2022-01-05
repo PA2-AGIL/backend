@@ -11,6 +11,9 @@ export type QuestionType = Question & Document;
 })
 export class Question {
   @ApiProperty()
+  _id: string;
+
+  @ApiProperty()
   @Prop({ required: true })
   title: string;
 

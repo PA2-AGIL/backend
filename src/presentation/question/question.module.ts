@@ -14,6 +14,8 @@ import {
   Producer,
   ProducerSchema,
 } from 'src/database/entities/producer/producer';
+import { Expert, ExpertSchema } from 'src/database/entities/expert/expert';
+import { ExpertRespository } from 'src/database/repositories/expert.repository';
 
 @Module({
   imports: [
@@ -21,10 +23,16 @@ import {
     MongooseModule.forFeature([
       { name: Question.name, schema: QuestionSchema },
       { name: Producer.name, schema: ProducerSchema },
+      { name: Expert.name, schema: ExpertSchema },
     ]),
     FileUploadModule,
   ],
-  providers: [QuestionService, QuestionRepository, ProducerRepository],
+  providers: [
+    QuestionService,
+    QuestionRepository,
+    ProducerRepository,
+    ExpertRespository,
+  ],
   controllers: [QuestionController],
 })
 export class QuestionModule {}

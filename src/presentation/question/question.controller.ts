@@ -89,8 +89,8 @@ export class QuestionController {
   @ApiNotFoundResponse()
   @Patch('/like/:id')
   @UseGuards(AuthGuard())
-  likeQuestion(@Param('id') id: string) {
-    return this.service.likeQuestion(id);
+  likeQuestion(@Param('id') id: string, @GetUser() user: User) {
+    return this.service.likeQuestion(id, String(user._id));
   }
 
   @ApiOkResponse({ type: Question })
