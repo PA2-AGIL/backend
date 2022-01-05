@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Query,
@@ -82,5 +83,21 @@ export class QuestionController {
   @UseGuards(AuthGuard())
   delete(@Param('id', ParseIntPipe) id: string) {
     return this.service.delete(id);
+  }
+
+  @ApiOkResponse({ type: Question })
+  @ApiNotFoundResponse()
+  @Patch('/like/:id')
+  @UseGuards(AuthGuard())
+  likeQuestion(@Param('id') id: string) {
+    return this.service.likeQuestion(id);
+  }
+
+  @ApiOkResponse({ type: Question })
+  @ApiNotFoundResponse()
+  @Patch('/dislike/:id')
+  @UseGuards(AuthGuard())
+  dislikeQuestion(@Param('id') id: string) {
+    return this.service.dislikeQuestion(id);
   }
 }

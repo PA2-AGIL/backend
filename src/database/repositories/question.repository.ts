@@ -103,4 +103,18 @@ export class QuestionRepository {
   async deleteQuestion(id: string) {
     return this.model.findByIdAndDelete({ id });
   }
+
+  async likeQuestion(id: string) {
+    const questionLiked = await this.model.findByIdAndUpdate(id, {
+      $inc: { likes: +1 },
+    });
+    return questionLiked;
+  }
+
+  async dislikeQuestion(id: string) {
+    const questionDisliked = await this.model.findByIdAndUpdate(id, {
+      $inc: { dislike: +1 },
+    });
+    return questionDisliked;
+  }
 }

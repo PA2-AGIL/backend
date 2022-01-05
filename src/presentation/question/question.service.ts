@@ -56,4 +56,12 @@ export class QuestionService {
   async delete(id: string) {
     return this.repository.deleteQuestion(id);
   }
+
+  async likeQuestion(id: string) {
+    return this.repository.likeQuestion(id);
+  }
+
+  async dislikeQuestion(id: string) {
+    return this.repository.dislikeQuestion(id);
+  }
 }

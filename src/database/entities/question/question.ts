@@ -30,6 +30,12 @@ export class Question {
 
   @Prop({ required: false })
   images: string[];
+
+  @Prop({ required: true, default: 0 })
+  likes: number;
+
+  @Prop({ required: true, default: 0 })
+  dislike: number;
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);
