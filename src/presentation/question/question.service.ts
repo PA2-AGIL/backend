@@ -36,11 +36,17 @@ export class QuestionService {
       ),
     );
 
-    return this.repository.createQuestion(
+    const createdQuestion = await this.repository.createQuestion(
       createQuestion,
       imagesToQuestion,
       owner,
     );
+
+    owner.questions.push(createdQuestion);
+
+    await owner.save();
+
+    return createQuestion;
   }
 
   async update(id: string, updateQuestion: UpdateQuestionDTOImp) {
