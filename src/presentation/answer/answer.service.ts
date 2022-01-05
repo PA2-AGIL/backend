@@ -33,8 +33,6 @@ export class AnswerService {
       ownerId,
     );
 
-    console.log(question);
-
     return createdAnswer;
   }
 
