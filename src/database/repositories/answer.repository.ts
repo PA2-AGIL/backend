@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { Pagination } from 'src/utils/pagination/pagination';
 import { Answer, AnswerType } from '../entities/answer/answer';
-import { QuestionType } from '../entities/question/question';
+import { Question } from '../entities/question/question';
 import { CreateAnswerDTO } from './dtos/createAnswerDTO.interface';
 import { UpdateAnswerDTO } from './dtos/updateAnswerDTO.interface';
 
@@ -70,7 +70,7 @@ export class AnswerRepository {
 
   async createAnswer(
     createAnswerDTO: CreateAnswerDTO,
-    question: QuestionType,
+    question: Question,
     ownerId: string,
   ) {
     const { content } = createAnswerDTO;
@@ -78,14 +78,10 @@ export class AnswerRepository {
     const answer = await this.model.create({
       content,
       ownerId,
-      questionId: question.id,
+      question,
     });
 
     await answer.save();
-
-    question.answers.push(answer);
-
-    await question.save();
 
     return answer;
   }

@@ -25,10 +25,10 @@ export class Question {
   @Prop({ type: Types.ObjectId, ref: 'Producer' })
   producer: Producer;
 
-  @Prop({ required: false })
+  @Prop({ required: false, type: [{ type: Types.ObjectId, ref: 'Answer' }] })
   answers: Answer[];
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   images: string[];
 }
 

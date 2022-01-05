@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document, Types } from 'mongoose';
+import { Question } from '../question/question';
 
 export type AnswerType = Answer & Document;
 
@@ -18,8 +19,8 @@ export class Answer {
   ownerId: string;
 
   @ApiProperty()
-  @Prop({ required: true })
-  questionId: string;
+  @Prop({ required: true, type: Types.ObjectId, ref: 'Question' })
+  question: Question;
 }
 
 export const AnswerSchema = SchemaFactory.createForClass(Answer);

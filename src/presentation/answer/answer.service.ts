@@ -27,7 +27,15 @@ export class AnswerService {
   ) {
     const question = await this.questionRepository.getByID(questionId);
 
-    return this.repository.createAnswer(createAnswerDTO, question, ownerId);
+    const createdAnswer = await this.repository.createAnswer(
+      createAnswerDTO,
+      question,
+      ownerId,
+    );
+
+    console.log(question);
+
+    return createdAnswer;
   }
 
   async update(id: string, updateAnswerDTO: UpdateAnswerDTOImp) {
