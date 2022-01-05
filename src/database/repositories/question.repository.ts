@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
@@ -62,7 +62,7 @@ export class QuestionRepository {
     const question = await this.model.findById(id);
 
     if (!question) {
-      throw Error('Não foi possível encontrar essa questão');
+      throw new BadRequestException('Não foi possível encontrar essa questão');
     }
 
     return question;
