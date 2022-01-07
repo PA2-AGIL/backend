@@ -25,7 +25,7 @@ export class QuestionService {
   }
 
   async create(
-    createQuestion: CreateQuestionDTOImp,
+    createQuestionDTO: CreateQuestionDTOImp,
     files: Express.Multer.File[],
     ownerId: string,
   ) {
@@ -39,7 +39,7 @@ export class QuestionService {
     );
 
     const createdQuestion = await this.repository.createQuestion(
-      createQuestion,
+      createQuestionDTO,
       imagesToQuestion,
       owner,
     );
@@ -48,7 +48,7 @@ export class QuestionService {
 
     await owner.save();
 
-    return createQuestion;
+    return createdQuestion;
   }
 
   async update(id: string, updateQuestion: UpdateQuestionDTOImp) {

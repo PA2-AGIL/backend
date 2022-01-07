@@ -25,15 +25,23 @@ export class AnswerService {
     questionId: string,
     ownerId: string,
   ) {
-    const question = await this.questionRepository.getByID(questionId);
+    try {
+      const question = await this.questionRepository.getByID(questionId);
 
-    const createdAnswer = await this.repository.createAnswer(
-      createAnswerDTO,
-      question,
-      ownerId,
-    );
+      const createdAnswer = await this.repository.createAnswer(
+        createAnswerDTO,
+        question,
+        ownerId,
+      );
 
-    return createdAnswer;
+      question.answers.push(createdAnswer);
+
+      await question.save();
+
+      return;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async update(id: string, updateAnswerDTO: UpdateAnswerDTOImp) {
