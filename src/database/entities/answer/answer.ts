@@ -5,6 +5,11 @@ import { Question } from '../question/question';
 
 export type AnswerType = Answer & Document;
 
+export class Owner {
+  name: string;
+  _id: string;
+  hasExpert: boolean;
+}
 @Schema({
   _id: true,
   timestamps: { createdAt: true, updatedAt: true },
@@ -16,7 +21,7 @@ export class Answer {
 
   @ApiProperty()
   @Prop({ required: true, type: Types.ObjectId })
-  ownerId: string;
+  owner: Owner;
 
   @ApiProperty()
   @Prop({ required: true, type: Types.ObjectId, ref: 'Question' })

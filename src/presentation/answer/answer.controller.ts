@@ -57,7 +57,7 @@ export class AnswerController {
     @Param('questionId') questionId: string,
     @GetUser() user: User,
   ) {
-    return this.service.create(createAnswerDto, questionId, String(user._id));
+    return this.service.create(createAnswerDto, questionId, user);
   }
 
   @ApiCreatedResponse({ type: Answer })

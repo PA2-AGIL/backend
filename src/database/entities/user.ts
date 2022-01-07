@@ -39,4 +39,6 @@ export class User {
 
   @Prop({ required: false, type: [{ type: Types.ObjectId, ref: 'Question' }] })
   questionsDisliked: Question[];
+
+  type: any;
 }

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { Pagination } from 'src/utils/pagination/pagination';
-import { Answer, AnswerType } from '../entities/answer/answer';
+import { Answer, AnswerType, Owner } from '../entities/answer/answer';
 import { Question } from '../entities/question/question';
 import { CreateAnswerDTO } from './dtos/createAnswerDTO.interface';
 import { UpdateAnswerDTO } from './dtos/updateAnswerDTO.interface';
@@ -58,6 +58,16 @@ export class AnswerRepository {
     }
   }
 
+  async getAnswer(id: string) {
+    const answer = await this.model.findById(id).populate('ownerId');
+
+    if (!answer) {
+      throw new BadRequestException('Não foi possível encontrar essa resposta');
+    }
+
+    return answer;
+  }
+
   async getByID(id: string) {
     const answer = await this.model.findById(id);
 
@@ -71,13 +81,13 @@ export class AnswerRepository {
   async createAnswer(
     createAnswerDTO: CreateAnswerDTO,
     question: Question,
-    ownerId: string,
+    owner: Owner,
   ) {
     const { content } = createAnswerDTO;
 
     const answer = await this.model.create({
       content,
-      ownerId,
+      owner,
       question,
     });
 

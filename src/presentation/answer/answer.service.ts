@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { QuestionRepository } from 'src/database/repositories/question.repository';
 import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
+import { Owner } from 'src/database/entities/answer/answer';
 import { AnswerRepository } from '../../database/repositories/answer.repository';
 import { CreateAnswerDTOImp } from './dto/createAnswerDTO';
 import { UpdateAnswerDTOImp } from './dto/updateAnswerDTO';
+import { User } from 'src/database/entities/user';
 
 @Injectable()
 export class AnswerService {
@@ -23,15 +25,21 @@ export class AnswerService {
   async create(
     createAnswerDTO: CreateAnswerDTOImp,
     questionId: string,
-    ownerId: string,
+    owner: User,
   ) {
     try {
+      const ownerOfAnswer = new Owner();
+
+      ownerOfAnswer.name = owner.name;
+      ownerOfAnswer.hasExpert = owner?.type !== undefined ? true : false;
+      ownerOfAnswer._id = owner._id.toString();
+
       const question = await this.questionRepository.getByID(questionId);
 
       const createdAnswer = await this.repository.createAnswer(
         createAnswerDTO,
         question,
-        ownerId,
+        ownerOfAnswer,
       );
 
       question.answers.push(createdAnswer);
