@@ -58,6 +58,19 @@ export class QuestionRepository {
     }
   }
 
+  async getQuestion(id: string) {
+    const question = await this.model
+      .findById(id)
+      .populate('answers')
+      .populate('producer', 'name');
+
+    if (!question) {
+      throw new BadRequestException('Não foi possível encontrar essa questão');
+    }
+
+    return question;
+  }
+
   async getByID(id: string) {
     const question = await this.model.findById(id);
 

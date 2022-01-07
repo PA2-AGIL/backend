@@ -21,7 +21,7 @@ export class QuestionService {
   }
 
   async getByID(id: string) {
-    return this.repository.getByID(id);
+    return this.repository.getQuestion(id);
   }
 
   async create(
