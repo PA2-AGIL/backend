@@ -97,8 +97,6 @@ export class QuestionRepository {
 
     await question.save();
 
-    console.log(question);
-
     return question;
   }
 
@@ -130,7 +128,7 @@ export class QuestionRepository {
   async removeLikedFromQuestion(id: string) {
     const dislikedQUestionToLikeIt = await this.model.findByIdAndUpdate(id, {
       $inc: {
-        like: -1,
+        likes: -1,
       },
     });
 

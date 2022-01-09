@@ -34,10 +34,18 @@ export class User {
   @Prop({ required: true })
   salt: string;
 
-  @Prop({ required: false, type: [{ type: Types.ObjectId, ref: 'Question' }] })
+  @Prop({
+    required: false,
+    type: [{ type: Types.ObjectId, ref: 'Question' }],
+    unique: true,
+  })
   questionsLiked: Question[];
 
-  @Prop({ required: false, type: [{ type: Types.ObjectId, ref: 'Question' }] })
+  @Prop({
+    required: false,
+    type: [{ type: Types.ObjectId, ref: 'Question' }],
+    unique: true,
+  })
   questionsDisliked: Question[];
 
   type: any;

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { QuestionRepository } from 'src/database/repositories/question.repository';
 import { CreateQuestionDTOImp } from './dto/createQuestionDTO';
 import { UpdateQuestionDTOImp } from './dto/updateQuestionDTO';
@@ -83,7 +83,7 @@ export class QuestionService {
       } else if (dislikedQuestionToLikeIt) {
         return await this.likeDislikedQuestion(id, expertFounded);
       } else {
-        console.log('A questão ja foi dado like');
+        throw new BadRequestException('A questão já foi dada like');
       }
     }
 
@@ -103,7 +103,7 @@ export class QuestionService {
       } else if (dislikedQuestionToLikeIt) {
         return await this.likeDislikedQuestion(id, producerFounded);
       } else {
-        console.log('A questão ja foi dado like');
+        throw new BadRequestException('A questão já foi dada like');
       }
     }
   }
@@ -126,10 +126,13 @@ export class QuestionService {
 
       if (alreadyDislikedQuestions === undefined) {
         return await this.deslikeNewQuestion(id, expertFounded);
-      } else if (likedQuestionToDislikeIt) {
-        return await this.deslikeLikedQuestion(id, expertFounded);
+      } else if (likedQuestionToDislikeIt !== undefined) {
+        return await this.deslikeLikedQuestion(
+          likedQuestionToDislikeIt._id.toString(),
+          expertFounded,
+        );
       } else {
-        console.log('A questão ja foi dada dislike');
+        throw new BadRequestException('A questão já foi dada dislike');
       }
     }
 
@@ -147,9 +150,12 @@ export class QuestionService {
       if (alreadyDislikedQuestions === undefined) {
         return await this.deslikeNewQuestion(id, producerFounded);
       } else if (likedQuestionToDislikeIt) {
-        return await this.deslikeLikedQuestion(id, producerFounded);
+        return await this.deslikeLikedQuestion(
+          likedQuestionToDislikeIt._id.toString(),
+          producerFounded,
+        );
       } else {
-        console.log('A questão ja foi dada dislike');
+        throw new BadRequestException('A questão já foi dada dislike');
       }
     }
   }
@@ -188,7 +194,7 @@ export class QuestionService {
       await this.repository.removeDislikedFromQuestion(id);
 
     user.questionsDisliked.splice(
-      user.questionsDisliked.indexOf(removeQuestionDesliked),
+      user.questionsDisliked.indexOf(removeQuestionDesliked) + 1,
       1,
     );
 
@@ -205,18 +211,20 @@ export class QuestionService {
     id: string,
     user: (Expert & Document) | (Producer & Document),
   ) {
+    console.log('entrou');
+
     const removeQuestionLiked = await this.repository.removeLikedFromQuestion(
       id,
     );
 
     user.questionsLiked.splice(
-      user.questionsLiked.indexOf(removeQuestionLiked),
+      user.questionsLiked.indexOf(removeQuestionLiked) + 1,
       1,
     );
 
     const questionDisliked = await this.repository.dislikeQuestion(id);
 
-    user.questionsLiked.push(questionDisliked);
+    user.questionsDisliked.push(questionDisliked);
 
     await user.save();
 
