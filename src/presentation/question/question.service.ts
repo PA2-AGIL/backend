@@ -110,6 +110,9 @@ export class QuestionService {
     );
 
     if (alreadyLikedQuestions === undefined) {
+      if (dislikedQuestionToLikeIt) {
+        return await this.likeDislikedQuestion(question._id.toString(), user);
+      }
       return await this.likeNewQuestion(question._id.toString(), user);
     } else if (dislikedQuestionToLikeIt) {
       return await this.likeDislikedQuestion(question._id.toString(), user);
@@ -133,6 +136,12 @@ export class QuestionService {
     );
 
     if (alreadyDislikedQuestions === undefined) {
+      if (likedQuestionToDislikeIt) {
+        return await this.deslikeLikedQuestion(
+          likedQuestionToDislikeIt._id.toString(),
+          user,
+        );
+      }
       return await this.deslikeNewQuestion(question._id.toString(), user);
     } else if (likedQuestionToDislikeIt !== undefined) {
       return await this.deslikeLikedQuestion(
@@ -197,8 +206,6 @@ export class QuestionService {
     id: string,
     user: (Expert & Document) | (Producer & Document),
   ) {
-    console.log('entrou');
-
     const removeQuestionLiked = await this.repository.removeLikedFromQuestion(
       id,
     );
