@@ -90,14 +90,14 @@ export class QuestionController {
   @Patch('/like/:id')
   @UseGuards(AuthGuard())
   likeQuestion(@Param('id') id: string, @GetUser() user: User) {
-    return this.service.likeQuestion(id, String(user._id));
+    return this.service.likeQuestion(id, user._id.toString());
   }
 
   @ApiOkResponse({ type: Question })
   @ApiNotFoundResponse()
   @Patch('/dislike/:id')
   @UseGuards(AuthGuard())
-  dislikeQuestion(@Param('id') id: string) {
-    return this.service.dislikeQuestion(id);
+  dislikeQuestion(@Param('id') id: string, @GetUser() user: User) {
+    return this.service.dislikeQuestion(id, user._id.toString());
   }
 }

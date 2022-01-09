@@ -6,6 +6,9 @@ import { ProducerRepository } from 'src/database/repositories/producer.repositor
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
 import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { ExpertRespository } from 'src/database/repositories/expert.repository';
+import { Expert } from 'src/database/entities/expert/expert';
+import { Document } from 'mongoose';
+import { Producer } from 'src/database/entities/producer/producer';
 
 @Injectable()
 export class QuestionService {
@@ -48,7 +51,7 @@ export class QuestionService {
 
     await owner.save();
 
-    return createdQuestion;
+    return;
   }
 
   async update(id: string, updateQuestion: UpdateQuestionDTOImp) {
@@ -70,14 +73,15 @@ export class QuestionService {
           question._id.toString() === questionToLiked._id.toString(),
       );
 
+      const dislikedQuestionToLikeIt = expertFounded.questionsDisliked.find(
+        (question) =>
+          question._id.toString() === questionToLiked._id.toString(),
+      );
+
       if (alreadyLikedQuestions === undefined) {
-        const likedQuestion = await this.repository.likeQuestion(id);
-
-        expertFounded.questionsLiked.push(likedQuestion);
-
-        await expertFounded.save();
-
-        return likedQuestion;
+        return await this.likeNewQuestion(id, expertFounded);
+      } else if (dislikedQuestionToLikeIt) {
+        return await this.likeDislikedQuestion(id, expertFounded);
       } else {
         console.log('A questão ja foi dado like');
       }
@@ -89,55 +93,133 @@ export class QuestionService {
           question._id.toString() === questionToLiked._id.toString(),
       );
 
+      const dislikedQuestionToLikeIt = producerFounded.questionsDisliked.find(
+        (question) =>
+          question._id.toString() === questionToLiked._id.toString(),
+      );
+
       if (alreadyLikedQuestions === undefined) {
-        const likedQuestion = await this.repository.likeQuestion(id);
-
-        producerFounded.questionsLiked.push(likedQuestion);
-
-        await producerFounded.save();
-
-        return likedQuestion;
+        return await this.likeNewQuestion(id, producerFounded);
+      } else if (dislikedQuestionToLikeIt) {
+        return await this.likeDislikedQuestion(id, producerFounded);
       } else {
         console.log('A questão ja foi dado like');
       }
     }
-
-    // if (
-    //   !expertFounded.questionsAlreadyLiked.includes(questionToLiked) &&
-    //   !expertFounded.questionsAlreadyDisliked.includes(questionToLiked)
-    // ) {
-    // const likedQuestion = await this.repository.likeQuestion(id);
-
-    // expertFounded.questionsLiked.push(likedQuestion);
-
-    // await expertFounded.save();
-
-    // return likedQuestion;
-    // }
-    // if (
-    //   !expertFounded.questionsAlreadyLiked.includes(questionToLiked) &&
-    //   expertFounded.questionsAlreadyDisliked.includes(questionToLiked)
-    // ) {
-    //   const likedQuestion = await this.repository.likeQuestion(id);
-
-    //   expertFounded.questionsAlreadyDisliked.splice(
-    //     expertFounded.questionsAlreadyDisliked.indexOf(likedQuestion),
-    //     1,
-    //   );
-    // } else if (producerFounded) {
-    //   if (!producerFounded.questionsAlreadyLiked.includes(questionToLiked)) {
-    //     const likedQuestion = await this.repository.likeQuestion(id);
-
-    //     producerFounded.questionsAlreadyLiked.push(likedQuestion);
-
-    //     await producerFounded.save();
-
-    //     return likedQuestion;
-    //   }
-    // }
   }
 
-  async dislikeQuestion(id: string) {
-    return this.repository.dislikeQuestion(id);
+  async dislikeQuestion(id: string, userId: string) {
+    const expertFounded = await this.expertRepository.getById(userId);
+    const producerFounded = await this.producerRepository.getByID(userId);
+    const questionToDisliked = await this.repository.getByID(id);
+
+    if (expertFounded) {
+      const alreadyDislikedQuestions = expertFounded.questionsDisliked.find(
+        (question) =>
+          question._id.toString() === questionToDisliked._id.toString(),
+      );
+
+      const likedQuestionToDislikeIt = expertFounded.questionsLiked.find(
+        (question) =>
+          question._id.toString() === questionToDisliked._id.toString(),
+      );
+
+      if (alreadyDislikedQuestions === undefined) {
+        return await this.deslikeNewQuestion(id, expertFounded);
+      } else if (likedQuestionToDislikeIt) {
+        return await this.deslikeLikedQuestion(id, expertFounded);
+      } else {
+        console.log('A questão ja foi dada dislike');
+      }
+    }
+
+    if (producerFounded) {
+      const alreadyDislikedQuestions = producerFounded.questionsDisliked.find(
+        (question) =>
+          question._id.toString() === questionToDisliked._id.toString(),
+      );
+
+      const likedQuestionToDislikeIt = producerFounded.questionsLiked.find(
+        (question) =>
+          question._id.toString() === questionToDisliked._id.toString(),
+      );
+
+      if (alreadyDislikedQuestions === undefined) {
+        return await this.deslikeNewQuestion(id, producerFounded);
+      } else if (likedQuestionToDislikeIt) {
+        return await this.deslikeLikedQuestion(id, producerFounded);
+      } else {
+        console.log('A questão ja foi dada dislike');
+      }
+    }
+  }
+
+  private async likeNewQuestion(
+    id: string,
+    user: (Expert & Document) | (Producer & Document),
+  ) {
+    const likedQuestion = await this.repository.likeQuestion(id);
+
+    user.questionsLiked.push(likedQuestion);
+
+    await user.save();
+
+    return likedQuestion;
+  }
+
+  private async deslikeNewQuestion(
+    id: string,
+    user: (Expert & Document) | (Producer & Document),
+  ) {
+    const dislikedQuestion = await this.repository.dislikeQuestion(id);
+
+    user.questionsDisliked.push(dislikedQuestion);
+
+    await user.save();
+
+    return dislikedQuestion;
+  }
+
+  private async likeDislikedQuestion(
+    id: string,
+    user: (Expert & Document) | (Producer & Document),
+  ) {
+    const removeQuestionDesliked =
+      await this.repository.removeDislikedFromQuestion(id);
+
+    user.questionsDisliked.splice(
+      user.questionsDisliked.indexOf(removeQuestionDesliked),
+      1,
+    );
+
+    const questionLiked = await this.repository.likeQuestion(id);
+
+    user.questionsLiked.push(questionLiked);
+
+    await user.save();
+
+    return questionLiked;
+  }
+
+  private async deslikeLikedQuestion(
+    id: string,
+    user: (Expert & Document) | (Producer & Document),
+  ) {
+    const removeQuestionLiked = await this.repository.removeLikedFromQuestion(
+      id,
+    );
+
+    user.questionsLiked.splice(
+      user.questionsLiked.indexOf(removeQuestionLiked),
+      1,
+    );
+
+    const questionDisliked = await this.repository.dislikeQuestion(id);
+
+    user.questionsLiked.push(questionDisliked);
+
+    await user.save();
+
+    return questionDisliked;
   }
 }

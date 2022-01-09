@@ -123,13 +123,35 @@ export class QuestionRepository {
     const questionLiked = await this.model.findByIdAndUpdate(id, {
       $inc: { likes: +1 },
     });
+
     return questionLiked;
+  }
+
+  async removeLikedFromQuestion(id: string) {
+    const dislikedQUestionToLikeIt = await this.model.findByIdAndUpdate(id, {
+      $inc: {
+        like: -1,
+      },
+    });
+
+    return dislikedQUestionToLikeIt;
+  }
+
+  async removeDislikedFromQuestion(id: string) {
+    const dislikedQUestionToLikeIt = await this.model.findByIdAndUpdate(id, {
+      $inc: {
+        dislike: -1,
+      },
+    });
+
+    return dislikedQUestionToLikeIt;
   }
 
   async dislikeQuestion(id: string) {
     const questionDisliked = await this.model.findByIdAndUpdate(id, {
       $inc: { dislike: +1 },
     });
+
     return questionDisliked;
   }
 }
