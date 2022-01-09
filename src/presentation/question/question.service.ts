@@ -9,6 +9,7 @@ import { ExpertRespository } from 'src/database/repositories/expert.repository';
 import { Expert } from 'src/database/entities/expert/expert';
 import { Document } from 'mongoose';
 import { Producer } from 'src/database/entities/producer/producer';
+import { Question } from 'src/database/entities/question/question';
 
 @Injectable()
 export class QuestionService {
@@ -68,43 +69,11 @@ export class QuestionService {
     const questionToLiked = await this.repository.getByID(id);
 
     if (expertFounded) {
-      const alreadyLikedQuestions = expertFounded.questionsLiked.find(
-        (question) =>
-          question._id.toString() === questionToLiked._id.toString(),
-      );
-
-      const dislikedQuestionToLikeIt = expertFounded.questionsDisliked.find(
-        (question) =>
-          question._id.toString() === questionToLiked._id.toString(),
-      );
-
-      if (alreadyLikedQuestions === undefined) {
-        return await this.likeNewQuestion(id, expertFounded);
-      } else if (dislikedQuestionToLikeIt) {
-        return await this.likeDislikedQuestion(id, expertFounded);
-      } else {
-        throw new BadRequestException('A questão já foi dada like');
-      }
+      return await this.handleLikeQuestion(questionToLiked, expertFounded);
     }
 
     if (producerFounded) {
-      const alreadyLikedQuestions = producerFounded.questionsLiked.find(
-        (question) =>
-          question._id.toString() === questionToLiked._id.toString(),
-      );
-
-      const dislikedQuestionToLikeIt = producerFounded.questionsDisliked.find(
-        (question) =>
-          question._id.toString() === questionToLiked._id.toString(),
-      );
-
-      if (alreadyLikedQuestions === undefined) {
-        return await this.likeNewQuestion(id, producerFounded);
-      } else if (dislikedQuestionToLikeIt) {
-        return await this.likeDislikedQuestion(id, producerFounded);
-      } else {
-        throw new BadRequestException('A questão já foi dada like');
-      }
+      return await this.handleLikeQuestion(questionToLiked, producerFounded);
     }
   }
 
@@ -114,49 +83,66 @@ export class QuestionService {
     const questionToDisliked = await this.repository.getByID(id);
 
     if (expertFounded) {
-      const alreadyDislikedQuestions = expertFounded.questionsDisliked.find(
-        (question) =>
-          question._id.toString() === questionToDisliked._id.toString(),
+      return await this.handleDislikeQuestion(
+        questionToDisliked,
+        expertFounded,
       );
-
-      const likedQuestionToDislikeIt = expertFounded.questionsLiked.find(
-        (question) =>
-          question._id.toString() === questionToDisliked._id.toString(),
-      );
-
-      if (alreadyDislikedQuestions === undefined) {
-        return await this.deslikeNewQuestion(id, expertFounded);
-      } else if (likedQuestionToDislikeIt !== undefined) {
-        return await this.deslikeLikedQuestion(
-          likedQuestionToDislikeIt._id.toString(),
-          expertFounded,
-        );
-      } else {
-        throw new BadRequestException('A questão já foi dada dislike');
-      }
     }
 
     if (producerFounded) {
-      const alreadyDislikedQuestions = producerFounded.questionsDisliked.find(
-        (question) =>
-          question._id.toString() === questionToDisliked._id.toString(),
+      return await this.handleDislikeQuestion(
+        questionToDisliked,
+        producerFounded,
       );
+    }
+  }
 
-      const likedQuestionToDislikeIt = producerFounded.questionsLiked.find(
-        (question) =>
-          question._id.toString() === questionToDisliked._id.toString(),
+  private async handleLikeQuestion(
+    question: Question & Document,
+    user: (Expert & Document) | (Producer & Document),
+  ) {
+    const alreadyLikedQuestions = user.questionsLiked.find(
+      (q) => q._id.toString() === question._id.toString(),
+    );
+
+    const dislikedQuestionToLikeIt = user.questionsDisliked.find(
+      (q) => q._id.toString() === question._id.toString(),
+    );
+
+    if (alreadyLikedQuestions === undefined) {
+      return await this.likeNewQuestion(question._id.toString(), user);
+    } else if (dislikedQuestionToLikeIt) {
+      return await this.likeDislikedQuestion(question._id.toString(), user);
+    } else {
+      throw new BadRequestException(
+        `O usuário ${user.name} já deu like nesta questão`,
       );
+    }
+  }
 
-      if (alreadyDislikedQuestions === undefined) {
-        return await this.deslikeNewQuestion(id, producerFounded);
-      } else if (likedQuestionToDislikeIt) {
-        return await this.deslikeLikedQuestion(
-          likedQuestionToDislikeIt._id.toString(),
-          producerFounded,
-        );
-      } else {
-        throw new BadRequestException('A questão já foi dada dislike');
-      }
+  private async handleDislikeQuestion(
+    question: Question & Document,
+    user: (Expert & Document) | (Producer & Document),
+  ) {
+    const alreadyDislikedQuestions = user.questionsDisliked.find(
+      (q) => q._id.toString() === question._id.toString(),
+    );
+
+    const likedQuestionToDislikeIt = user.questionsLiked.find(
+      (q) => q._id.toString() === question._id.toString(),
+    );
+
+    if (alreadyDislikedQuestions === undefined) {
+      return await this.deslikeNewQuestion(question._id.toString(), user);
+    } else if (likedQuestionToDislikeIt !== undefined) {
+      return await this.deslikeLikedQuestion(
+        likedQuestionToDislikeIt._id.toString(),
+        user,
+      );
+    } else {
+      throw new BadRequestException(
+        `O usuário ${user.name} já deu dislike nesta questão`,
+      );
     }
   }
 
