@@ -7,6 +7,7 @@ import { FileUploadService } from 'src/service/file-upload/file-upload.service';
 import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { ExpertRespository } from 'src/database/repositories/expert.repository';
 import { Expert } from 'src/database/entities/expert/expert';
+import { ExpertType } from 'src/database/entities/expert/expert-type.enum';
 import { Document } from 'mongoose';
 import { Producer } from 'src/database/entities/producer/producer';
 import { Question } from 'src/database/entities/question/question';
@@ -33,14 +34,32 @@ export class QuestionService {
     files: Express.Multer.File[],
     ownerId: string,
   ) {
+    const { tags } = createQuestionDTO;
+
+    const isValidTags = tags.every((tag) => {
+      return Object.values(ExpertType).find((value) => {
+        return value.toString() === tag.toUpperCase();
+      });
+    });
+
+    if (!isValidTags) {
+      throw new BadRequestException(
+        'As tags possuem pelo menos um tipo errado',
+      );
+    }
+
     const owner = await this.producerRepository.getByID(ownerId);
 
-    const imagesToQuestion = await Promise.all(
-      files.map(
-        async (file) =>
-          await this.fileUploadService.upload(file.buffer, file.originalname),
-      ),
-    );
+    let imagesToQuestion;
+
+    if (files) {
+      imagesToQuestion = await Promise.all(
+        files.map(
+          async (file) =>
+            await this.fileUploadService.upload(file.buffer, file.originalname),
+        ),
+      );
+    }
 
     const createdQuestion = await this.repository.createQuestion(
       createQuestionDTO,

@@ -39,6 +39,9 @@ export class Question {
 
   @Prop({ required: true, default: 0 })
   dislike: number;
+
+  @Prop({ required: false })
+  tags: string[];
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);

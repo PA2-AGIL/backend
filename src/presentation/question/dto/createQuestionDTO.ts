@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { CreateQuestionDTO } from '../../../database/repositories/dtos/createQuestionDTO.interface';
 
 export class CreateQuestionDTOImp implements CreateQuestionDTO {
@@ -12,4 +12,9 @@ export class CreateQuestionDTOImp implements CreateQuestionDTO {
   @IsNotEmpty()
   @IsString()
   content: string;
+
+  @ApiProperty()
+  @IsArray()
+  @IsOptional()
+  tags: string[];
 }

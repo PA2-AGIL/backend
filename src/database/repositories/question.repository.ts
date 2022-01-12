@@ -86,13 +86,14 @@ export class QuestionRepository {
     images: string[],
     producer: Producer,
   ) {
-    const { title, content } = createQuestionDTO;
+    const { title, content, tags } = createQuestionDTO;
 
     const question = await this.model.create({
       title,
       content,
       images,
       producer,
+      tags,
     });
 
     await question.save();
