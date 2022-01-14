@@ -26,7 +26,11 @@ export class QuestionRepository {
     if (query) {
       const result = await this.model
         .find({
-          $or: [{ content: { $in: [query] } }, { title: { $in: [query] } }],
+          $or: [
+            { content: { $in: [query] } },
+            { title: { $in: [query] } },
+            { tags: { $in: [query] } },
+          ],
         })
         .populate('producer', 'name')
         .limit(limit)
