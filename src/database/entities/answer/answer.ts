@@ -26,6 +26,12 @@ export class Answer {
   @ApiProperty()
   @Prop({ required: true, type: Types.ObjectId, ref: 'Question' })
   question: Question;
+
+  @Prop({ required: true, default: 0 })
+  likes: number;
+
+  @Prop({ required: true, default: 0 })
+  dislike: number;
 }
 
 export const AnswerSchema = SchemaFactory.createForClass(Answer);

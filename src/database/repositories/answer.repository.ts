@@ -110,4 +110,44 @@ export class AnswerRepository {
   async deleteAnswer(id: string) {
     return this.model.findByIdAndDelete({ id });
   }
+
+  async likeAnswer(id: string) {
+    const answerLiked = await this.model.findByIdAndUpdate(id, {
+      $inc: {
+        likes: +1,
+      },
+    });
+
+    return answerLiked;
+  }
+
+  async removeLikedFromAnswer(id: string) {
+    const likedAnswerToDislikeIt = await this.model.findByIdAndUpdate(id, {
+      $inc: {
+        likes: -1,
+      },
+    });
+
+    return likedAnswerToDislikeIt;
+  }
+
+  async dislikeQuestion(id: string) {
+    const questionToDisliked = await this.model.findByIdAndUpdate(id, {
+      $inc: {
+        dislike: +1,
+      },
+    });
+
+    return questionToDisliked;
+  }
+
+  async removeDislikedFromAnswer(id: string) {
+    const dislikeAnswerToLikeIt = await this.model.findByIdAndUpdate(id, {
+      $inc: {
+        dislike: -1,
+      },
+    });
+
+    return dislikeAnswerToLikeIt;
+  }
 }
