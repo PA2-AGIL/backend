@@ -9,7 +9,7 @@ import { QuestionModule } from './presentation/question/question.module';
 import { AnswerModule } from './presentation/answer/answer.module';
 import { FileUploadModule } from './service/file-upload/file-upload.module';
 import { AuthModule } from './auth/auth.module';
-import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
+import { ForgotPasswordModule } from './service/forgot-password/forgot-password.module';
 
 @Module({
   imports: [
