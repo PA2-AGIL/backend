@@ -16,6 +16,9 @@ export class Owner {
 })
 export class Answer {
   @ApiProperty()
+  _id: string;
+
+  @ApiProperty()
   @Prop({ required: true })
   content: string;
 

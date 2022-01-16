@@ -131,14 +131,14 @@ export class AnswerRepository {
     return likedAnswerToDislikeIt;
   }
 
-  async dislikeQuestion(id: string) {
-    const questionToDisliked = await this.model.findByIdAndUpdate(id, {
+  async dislikeAnswer(id: string) {
+    const answerToDisliked = await this.model.findByIdAndUpdate(id, {
       $inc: {
         dislike: +1,
       },
     });
 
-    return questionToDisliked;
+    return answerToDisliked;
   }
 
   async removeDislikedFromAnswer(id: string) {

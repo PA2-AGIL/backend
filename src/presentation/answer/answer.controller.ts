@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Query,
@@ -75,7 +76,23 @@ export class AnswerController {
   @ApiNotFoundResponse()
   @Delete('/:id')
   @UseGuards(AuthGuard())
-  delete(@Param('id', ParseIntPipe) id: string) {
+  delete(@Param('id') id: string) {
     return this.service.delete(id);
+  }
+
+  @ApiOkResponse({ type: Answer })
+  @ApiNotFoundResponse()
+  @Patch('/like/:id')
+  @UseGuards(AuthGuard())
+  like(@Param('id') id: string, @GetUser() user: User) {
+    return this.service.likeAnswer(id, user._id.toString());
+  }
+
+  @ApiOkResponse({ type: Answer })
+  @ApiNotFoundResponse()
+  @Patch('/dislike/:id')
+  @UseGuards(AuthGuard())
+  dislike(@Param('id') id: string, @GetUser() user: User) {
+    return this.service.dislikeAnswer(id, user._id.toString());
   }
 }
