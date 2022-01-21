@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { FileUploadService } from 'src/service/file-upload/file-upload.service';
 import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { ProducerRepository } from '../../database/repositories/producer.repository';
@@ -29,6 +29,12 @@ export class ProducerService {
     profilePicture: Express.Multer.File,
   ) {
     let stringToPicture = null;
+
+    const { email } = createProducerDTO;
+
+    const producer = this.getByEmail(email);
+
+    if (producer) throw new BadRequestException('Email em uso!');
 
     if (profilePicture) {
       const { url } = await this.fileUploadService.uploadPictureProfile(

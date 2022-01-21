@@ -29,7 +29,11 @@ export class ExpertService {
     createExpertDTO: CreateExpertDTOImp,
     profilePicture: Express.Multer.File,
   ) {
-    const { type } = createExpertDTO;
+    const { type, email } = createExpertDTO;
+
+    const expert = this.getByEmail(email);
+
+    if (expert) throw new BadRequestException('Email em uso!');
 
     const isValidType = Object.values(ExpertType).find(
       (value) => value.toString() === type.toUpperCase(),
