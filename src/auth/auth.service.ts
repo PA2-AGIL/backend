@@ -33,7 +33,9 @@ export class AuthService {
 
     const payload: JwtPayload = {
       id: expertSignIn.id,
+      name: expertSignIn.name,
       email: expertSignIn.email,
+      type: expertSignIn.type,
     };
     const accessToken = this.jwtService.sign(payload);
 
@@ -58,6 +60,7 @@ export class AuthService {
 
     const payload: JwtPayload = {
       id: producerSignIn.id,
+      name: producerSignIn.name,
       email: producerSignIn.email,
     };
     const accessToken = this.jwtService.sign(payload);
