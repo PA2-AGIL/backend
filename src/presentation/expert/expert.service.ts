@@ -31,7 +31,7 @@ export class ExpertService {
   ) {
     const { type, email } = createExpertDTO;
 
-    const expert = this.getByEmail(email);
+    const expert = await this.getByEmail(email);
 
     if (expert) throw new BadRequestException('Email em uso!');
 

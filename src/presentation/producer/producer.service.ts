@@ -32,7 +32,7 @@ export class ProducerService {
 
     const { email } = createProducerDTO;
 
-    const producer = this.getByEmail(email);
+    const producer = await this.getByEmail(email);
 
     if (producer) throw new BadRequestException('Email em uso!');
 
