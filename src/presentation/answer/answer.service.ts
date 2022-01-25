@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { QuestionRepository } from 'src/database/repositories/question.repository';
 import { PaginationDTO } from 'src/utils/pagination/dto/paginationDTO';
 import { Answer, Owner } from 'src/database/entities/answer/answer';
@@ -14,6 +14,8 @@ import { Expert } from 'src/database/entities/expert/expert';
 
 @Injectable()
 export class AnswerService {
+  private readonly logger = new Logger(AnswerService.name);
+
   constructor(
     private readonly repository: AnswerRepository,
     private readonly questionRepository: QuestionRepository,
