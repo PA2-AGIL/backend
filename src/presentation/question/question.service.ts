@@ -87,7 +87,7 @@ export class QuestionService {
   async close(id: string, userId: string) {
     const question = await this.repository.getByID(id);
 
-    if (question.producer._id !== userId) {
+    if (question.producer._id.toString() !== userId) {
       throw new BadRequestException('Usuário não pode fechar esta questão');
     }
 

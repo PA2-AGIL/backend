@@ -105,6 +105,6 @@ export class QuestionController {
   @Patch('/close/:id')
   @UseGuards(AuthGuard())
   close(@Param('id') id: string, @GetUser() user: User) {
-    return this.service.close(id, user._id);
+    return this.service.close(id, user._id.toString());
   }
 }
