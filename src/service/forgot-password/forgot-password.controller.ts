@@ -30,7 +30,7 @@ export class ForgotPasswordController {
 
     await this.service.create(forgotPassword);
 
-    const url = `http://localhost:3001/reset/${token}`;
+    const url = `http://localhost:3001/redefinir/${token}`;
 
     await this.mailerService.sendMail({
       to: forgotPassword.email,
