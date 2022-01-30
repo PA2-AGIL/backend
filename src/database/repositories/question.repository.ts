@@ -27,11 +27,25 @@ export class QuestionRepository {
       const result = await this.model
         .find({
           $or: [
-            { content: { $in: [query] } },
-            { title: { $in: [query] } },
-            { tags: { $in: [query] } },
+            {
+              title: {
+                $regex: new RegExp(query),
+                $options: 'i',
+              },
+            },
+            {
+              content: {
+                $regex: new RegExp(query),
+                $options: 'i',
+              },
+            },
+            {
+              tags: {
+                $regex: new RegExp(query),
+                $options: 'i',
+              },
+            },
           ],
-          closed: false,
         })
         .populate('producer', 'name')
         .limit(limit)
@@ -48,9 +62,7 @@ export class QuestionRepository {
       };
     } else {
       const result = await this.model
-        .find({
-          closed: false,
-        })
+        .find()
         .populate('producer', 'name')
         .limit(limit)
         .skip(skippedItems)
