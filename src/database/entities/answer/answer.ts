@@ -5,11 +5,12 @@ import { Question } from '../question/question';
 
 export type AnswerType = Answer & Document;
 
-export class Owner {
+export type Owner = {
   name: string;
   _id: string;
   hasExpert: boolean;
-}
+  type: string;
+};
 @Schema({
   _id: true,
   timestamps: { createdAt: true, updatedAt: true },

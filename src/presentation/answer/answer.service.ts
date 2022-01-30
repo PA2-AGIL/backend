@@ -37,11 +37,12 @@ export class AnswerService {
     owner: User,
   ) {
     try {
-      const ownerOfAnswer = new Owner();
-
-      ownerOfAnswer.name = owner.name;
-      ownerOfAnswer.hasExpert = owner?.type !== undefined ? true : false;
-      ownerOfAnswer._id = owner._id.toString();
+      const ownerOfAnswer: Owner = {
+        name: owner.name,
+        hasExpert: owner?.type !== undefined ? true : false,
+        _id: owner._id.toString(),
+        type: owner.type,
+      };
 
       const question = await this.questionRepository.getByID(questionId);
 
