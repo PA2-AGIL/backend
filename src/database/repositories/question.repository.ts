@@ -31,6 +31,7 @@ export class QuestionRepository {
             { title: { $in: [query] } },
             { tags: { $in: [query] } },
           ],
+          closed: false,
         })
         .populate('producer', 'name')
         .limit(limit)
@@ -47,11 +48,15 @@ export class QuestionRepository {
       };
     } else {
       const result = await this.model
-        .find()
+        .find({
+          closed: false,
+        })
         .populate('producer', 'name')
         .limit(limit)
         .skip(skippedItems)
-        .sort({ title: 'asc' });
+        .sort({
+          title: 'asc',
+        });
 
       return {
         data: result,
@@ -156,5 +161,15 @@ export class QuestionRepository {
     });
 
     return questionDisliked;
+  }
+
+  async close(id: string) {
+    const questionClosed = await this.model.findByIdAndUpdate(id, {
+      $set: {
+        closed: true,
+      },
+    });
+
+    return questionClosed;
   }
 }

@@ -84,6 +84,16 @@ export class QuestionService {
     return this.repository.deleteQuestion(id);
   }
 
+  async close(id: string, userId: string) {
+    const question = await this.repository.getByID(id);
+
+    if (question.producer._id !== userId) {
+      throw new BadRequestException('Usuário não pode fechar esta questão');
+    }
+
+    return await this.repository.close(id);
+  }
+
   async likeQuestion(id: string, userId: string) {
     const expertFounded = await this.expertRepository.getById(userId);
     const producerFounded = await this.producerRepository.getByID(userId);

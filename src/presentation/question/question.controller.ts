@@ -62,7 +62,6 @@ export class QuestionController {
     @UploadedFiles() files: Express.Multer.File[],
     @GetUser() user: User,
   ) {
-    // console.log(user);
     return this.service.create(createQuestion, files, String(user._id));
   }
 
@@ -99,5 +98,13 @@ export class QuestionController {
   @UseGuards(AuthGuard())
   dislikeQuestion(@Param('id') id: string, @GetUser() user: User) {
     return this.service.dislikeQuestion(id, user._id.toString());
+  }
+
+  @ApiOkResponse({ type: Question })
+  @ApiNotFoundResponse()
+  @Patch('/close/:id')
+  @UseGuards(AuthGuard())
+  close(@Param('id') id: string, @GetUser() user: User) {
+    return this.service.close(id, user._id);
   }
 }
