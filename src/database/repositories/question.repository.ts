@@ -24,29 +24,31 @@ export class QuestionRepository {
     const skippedItems = (page - 1) * limit;
 
     if (query) {
+      const queryObj = {
+        $or: [
+          {
+            title: {
+              $regex: new RegExp(query),
+              $options: 'i',
+            },
+          },
+          {
+            content: {
+              $regex: new RegExp(query),
+              $options: 'i',
+            },
+          },
+          {
+            tags: {
+              $regex: new RegExp(query),
+              $options: 'i',
+            },
+          },
+        ],
+      };
+      const pages = Math.ceil((await this.model.count(queryObj)) / limit);
       const result = await this.model
-        .find({
-          $or: [
-            {
-              title: {
-                $regex: new RegExp(query),
-                $options: 'i',
-              },
-            },
-            {
-              content: {
-                $regex: new RegExp(query),
-                $options: 'i',
-              },
-            },
-            {
-              tags: {
-                $regex: new RegExp(query),
-                $options: 'i',
-              },
-            },
-          ],
-        })
+        .find(queryObj)
         .populate('producer', 'name')
         .limit(limit)
         .skip(skippedItems)
@@ -59,8 +61,10 @@ export class QuestionRepository {
         limit,
         page,
         totalCount: result.length,
+        totalPages: pages,
       };
     } else {
+      const pages = Math.ceil((await this.model.count({})) / limit);
       const result = await this.model
         .find()
         .populate('producer', 'name')
@@ -75,6 +79,7 @@ export class QuestionRepository {
         limit,
         page,
         totalCount: result.length,
+        totalPages: pages,
       };
     }
   }
