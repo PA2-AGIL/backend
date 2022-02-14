@@ -38,28 +38,28 @@ export class User {
   @Prop({
     required: false,
     type: [{ type: Types.ObjectId, ref: 'Question' }],
-    unique: true,
+
   })
   questionsLiked: Question[];
 
   @Prop({
     required: false,
     type: [{ type: Types.ObjectId, ref: 'Question' }],
-    unique: true,
+
   })
   questionsDisliked: Question[];
 
   @Prop({
     required: false,
     type: [{ type: Types.ObjectId, ref: 'Answer' }],
-    unique: true,
+
   })
   answersLiked: Answer[];
 
   @Prop({
     required: false,
     type: [{ type: Types.ObjectId, ref: 'Answer' }],
-    unique: true,
+
   })
   answersDisliked: Answer[];
 
